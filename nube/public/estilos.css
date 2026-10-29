@@ -124,10 +124,9 @@ h2 { margin: 0; }
   position: sticky; top: 0; z-index: 5;
 }
 .marca { display: flex; align-items: center; gap: 14px; text-decoration: none; }
-.marca-ilt { height: 30px; width: auto; display: block; }
-:root[data-theme="dark"] .marca-ilt { filter: brightness(0) invert(1); }
-@media (prefers-color-scheme: dark) { :root:where(:not([data-theme="light"])) .marca-ilt { filter: brightness(0) invert(1); } }
+.marca-emblema { width: 40px; height: 40px; display: block; flex: none; }
 .marca-texto { border-left: 1px solid var(--borde); padding-left: 14px; line-height: 1.2; }
+.marca-texto > span { display: block; }
 .marca-nombre { font-size: 13px; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; }
 .marca-sub { font-size: 11.5px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--morado-texto); margin-top: 2px; }
 .cabecera-acciones { display: flex; align-items: center; gap: 10px; }
@@ -165,7 +164,7 @@ h2 { margin: 0; }
 .banda-fecha::before, .banda-fecha::after { content: ""; width: 26px; height: 1px; background: #e9d5ff; opacity: .7; }
 .guia { margin: 0; font-size: clamp(24px, 3.2vw, 38px); font-weight: 800; letter-spacing: -.02em; line-height: 1.1; text-wrap: balance; }
 .banda-pie { display: flex; align-items: center; gap: 14px; margin-top: 4px; font-size: 13.5px; color: #ede9fe; }
-.banda-pie img { height: 26px; width: auto; opacity: .95; }
+.banda-pie img { height: 28px; width: auto; flex: none; }
 
 /* ---------- filtros ---------- */
 .filtros-caja { max-width: 1500px; margin: 0 auto; padding: 18px clamp(14px, 4vw, 48px) 0; }
@@ -407,11 +406,46 @@ h2 { margin: 0; }
   body { font-size: 14.5px; }
   .cabecera { position: static; padding: 10px 14px; }
   .marca-texto { display: none; }
-  .marca-ilt { height: 26px; }
   .estado span:last-child { display: none; }
   .tema span { display: none; }
   .tema { padding: 0 10px; }
   .pasajeros > svg { display: none; }
   .pasajeros button { min-width: 28px; padding: 0 7px; }
   .banda { padding: 18px 14px 20px; }
-  .marca-texto > span { display: block; }
+  .guia { font-size: 23px; }
+  .banda-pie img { display: none; }
+  .filtros-caja { padding: 12px 10px 0; }
+  .filtros-caja > summary { display: flex; }
+  .filtros { margin-top: 8px; gap: 14px; padding: 14px; }
+  .filtro { width: 100%; }
+  .chips { overflow-x: auto; flex-wrap: nowrap; scrollbar-width: none; }
+  .tablero { padding: 12px 10px 20px; gap: 12px; }
+  .tablero > section { padding: 16px 14px; }
+  /* La mejor salida ocupa el primer pantallazo. */
+  .mejor { min-height: min(calc(100svh - 150px), 760px); display: grid; align-content: start; }
+  .vuelo-nombre { font-size: 19px; }
+  .ruta { grid-template-columns: minmax(0, 1fr) 84px minmax(0, 1fr); gap: 8px; padding: 12px; }
+  .ruta-hora { font-size: 30px; }
+  .ruta-iata { font-size: 12px; }
+  .ruta-medio { font-size: 11.5px; }
+  .canales { grid-template-columns: 1fr; }
+  .canal-precio { font-size: 26px; }
+  .frescura { margin-left: 0; width: 100%; }
+  .matriz { grid-template-columns: 40px repeat(5, minmax(0, 1fr)); gap: 3px; }
+  .celda { min-height: 54px; padding: 6px 2px 5px; border-radius: 9px; }
+  .celda-precio { font-size: 11.5px; }
+  .celda-origen { display: none; }
+  .celda.con-origen { padding-top: 6px; }
+  .fila.cab { display: none; }
+  .fila {
+    grid-template-columns: 56px 1fr auto;
+    grid-template-areas: "hora vuelo precio" "hora ruta maleta";
+    gap: 4px 10px; padding: 10px 8px;
+  }
+  .fila-hora { grid-area: hora; font-size: 18px; align-self: start; }
+  .fila-vuelo { grid-area: vuelo; }
+  .fila-ruta { grid-area: ruta; }
+  .fila .maleta { grid-area: maleta; justify-self: end; font-size: 12px; }
+  .fila .precio-col { display: none; }
+  .fila .precio-col.mejor-canal { display: block; grid-area: precio; }
+}
