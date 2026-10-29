@@ -1,0 +1,318 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Vigía de vuelos · Tepoztlán</title>
+<style>
+  :root {
+    color-scheme: light;
+    --bg: #f4f2ee;
+    --surface-1: #fcfcfb;
+    --border: #e4e1da;
+    --grid: #ebe8e1;
+    --text-primary: #0b0b0b;
+    --text-secondary: #52514e;
+    --text-muted: #85837d;
+    --series-1: #2a78d6;
+    --series-2: #eb6834;
+    --series-3: #1baf7a;
+    --good: #0a7d0a;
+    --critical: #c22f2f;
+    --accent: #2a78d6;
+    --shadow: 0 1px 2px rgba(20, 18, 10, .05), 0 8px 24px -12px rgba(20, 18, 10, .12);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      color-scheme: dark;
+      --bg: #121211;
+      --surface-1: #1a1a19;
+      --border: #2c2c2a;
+      --grid: #262624;
+      --text-primary: #f0efec;
+      --text-secondary: #c3c2b7;
+      --text-muted: #8d8c85;
+      --series-1: #3987e5;
+      --series-2: #d95926;
+      --series-3: #199e70;
+      --good: #3cc63c;
+      --critical: #ef6a6a;
+      --accent: #5598e7;
+      --shadow: none;
+    }
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; background: var(--bg); color: var(--text-primary);
+    font: 15px/1.45 "Segoe UI Variable Text", "Segoe UI", system-ui, sans-serif;
+    font-variant-numeric: tabular-nums;
+  }
+  .wrap { max-width: 1240px; margin: 0 auto; padding: 32px 24px 64px; }
+  header {
+    display: flex; flex-wrap: wrap; gap: 16px 24px; align-items: end; justify-content: space-between;
+    margin-bottom: 28px;
+  }
+  h1 { font: 600 28px/1.15 "Segoe UI Variable Display", "Segoe UI", system-ui, sans-serif; margin: 0; letter-spacing: -.01em; }
+  .sub { color: var(--text-secondary); margin-top: 6px; }
+  .controls { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+  .status { color: var(--text-secondary); font-size: 13px; display: flex; align-items: center; gap: 8px; }
+  .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--good); }
+  .dot.busy { background: var(--accent); animation: pulse 1s ease-in-out infinite; }
+  @keyframes pulse { 50% { opacity: .3; } }
+  button {
+    font: inherit; font-size: 14px; border-radius: 8px; padding: 8px 14px; cursor: pointer;
+    border: 1px solid var(--border); background: var(--surface-1); color: var(--text-primary);
+  }
+  button.primary { background: var(--accent); border-color: var(--accent); color: #fff; font-weight: 600; }
+  button:disabled { opacity: .55; cursor: default; }
+  button:focus-visible, a:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+  .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(540px, 1fr)); gap: 20px; }
+  @media (max-width: 620px) { .grid { grid-template-columns: 1fr; } }
+  .card {
+    background: var(--surface-1); border: 1px solid var(--border); border-radius: 14px;
+    padding: 20px 22px 16px; box-shadow: var(--shadow); display: flex; flex-direction: column; gap: 14px;
+  }
+  .card.principal { border-color: color-mix(in srgb, var(--accent) 45%, var(--border)); }
+  .head { display: flex; justify-content: space-between; gap: 12px; }
+  .route { font-weight: 600; font-size: 16px; }
+  .dates { color: var(--text-secondary); font-size: 13px; }
+  .tag { font-size: 12px; color: var(--text-muted); white-space: nowrap; }
+  .hero { display: flex; align-items: baseline; flex-wrap: wrap; gap: 6px 14px; }
+  .price { font: 600 36px/1 "Segoe UI Variable Display", "Segoe UI", system-ui, sans-serif; letter-spacing: -.02em; }
+  .price.na { font-size: 22px; color: var(--text-muted); }
+  .delta { font-size: 14px; font-weight: 600; display: inline-flex; gap: 4px; align-items: center; }
+  .delta.down { color: var(--good); }
+  .delta.up { color: var(--critical); }
+  .delta.same { color: var(--text-muted); font-weight: 500; }
+  .hero-label { width: 100%; font-size: 13px; color: var(--text-secondary); }
+  .stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+  .stat { border-top: 1px solid var(--border); padding-top: 8px; }
+  .stat b { display: block; font-size: 15px; font-weight: 600; }
+  .stat span { font-size: 12px; color: var(--text-muted); }
+  .rappi { font-size: 13px; color: var(--text-secondary); background: var(--bg); border-radius: 8px; padding: 8px 10px; }
+  .rappi strong { color: var(--text-primary); }
+  .legend { display: flex; flex-wrap: wrap; gap: 6px 18px; font-size: 13px; color: var(--text-secondary); }
+  .legend i { display: inline-block; width: 14px; height: 3px; border-radius: 2px; vertical-align: middle; margin-right: 6px; }
+  .legend b { color: var(--text-primary); font-weight: 600; margin-left: 4px; }
+  .chart { position: relative; }
+  .chart svg { display: block; width: 100%; height: 190px; overflow: visible; }
+  .chart .empty { position: absolute; inset: 0; display: grid; place-items: center; font-size: 13px; color: var(--text-muted); pointer-events: none; text-align: center; padding: 0 30px; }
+  .tip {
+    position: absolute; pointer-events: none; background: var(--surface-1); border: 1px solid var(--border);
+    border-radius: 8px; padding: 8px 10px; font-size: 12px; box-shadow: 0 6px 20px rgba(0,0,0,.18);
+    white-space: nowrap; transform: translate(-50%, -100%); top: 0; opacity: 0; transition: opacity .08s;
+  }
+  .tip .t { color: var(--text-muted); margin-bottom: 4px; }
+  .tip div i { display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-right: 6px; }
+  .foot { display: flex; justify-content: space-between; gap: 12px; font-size: 12px; color: var(--text-muted); flex-wrap: wrap; }
+  .foot a { color: var(--accent); text-decoration: none; }
+  .foot a:hover { text-decoration: underline; }
+  .err { color: var(--critical); }
+  .note { margin-top: 28px; font-size: 13px; color: var(--text-muted); max-width: 80ch; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div>
+      <h1>Vigía de vuelos · Tepoztlán</h1>
+      <div class="sub">Precios de Google Flights, ida y vuelta, 1 adulto con maleta de mano</div>
+    </div>
+    <div class="controls">
+      <div class="status" id="status"><span class="dot"></span><span>Cargando…</span></div>
+      <button id="test" title="Muestra una notificación de prueba en Windows">Probar alerta</button>
+      <button id="now" class="primary">Consultar ahora</button>
+    </div>
+  </header>
+  <div class="grid" id="grid"></div>
+  <p class="note">
+    El precio grande es el itinerario que estás pensando comprar. Si la aerolínea cambia ese vuelo o deja de venderlo,
+    aparece como «no disponible», y la línea «cualquiera, la más barata» te muestra si hay otra opción.
+    El estimado de Rappi aplica la diferencia que vimos en el checkout el 28 de octubre y asume Rappi PRO (sin el cargo de servicio de $100.000).
+    Te llega una notificación de Windows cuando el precio principal cambia $10.000 o más.
+  </p>
+</div>
+
+<script>
+const fmt = n => "$" + Math.round(n).toLocaleString("es-CO");
+const short = n => n >= 1e6 ? "$" + (n / 1e6).toLocaleString("es-CO", { maximumFractionDigits: 2 }) + " M" : "$" + Math.round(n / 1e3) + " mil";
+const fecha = ts => new Date(ts).toLocaleString("es-CO", { weekday: "short", day: "numeric", month: "short", hour: "numeric", minute: "2-digit" });
+const hace = ts => {
+  const m = Math.round((Date.now() - new Date(ts)) / 60000);
+  return m < 1 ? "hace un momento" : m < 60 ? `hace ${m} min` : `hace ${Math.floor(m / 60)} h ${m % 60} min`;
+};
+const SERIES = ["--series-1", "--series-2", "--series-3"];
+const css = v => getComputedStyle(document.documentElement).getPropertyValue(v).trim();
+
+let data = null;
+
+async function load() {
+  try {
+    data = await (await fetch("/api/data")).json();
+    render();
+  } catch {
+    document.getElementById("status").innerHTML = `<span class="dot" style="background:var(--critical)"></span><span>El vigía no está corriendo. Ábrelo con iniciar.bat</span>`;
+  }
+}
+
+function renderStatus() {
+  const e = data.estado, el = document.getElementById("status");
+  const btn = document.getElementById("now");
+  btn.disabled = e.consultando;
+  if (e.consultando) {
+    el.innerHTML = `<span class="dot busy"></span><span>Consultando precios…</span>`;
+    return;
+  }
+  const mins = e.proxima ? Math.max(0, Math.round((new Date(e.proxima) - Date.now()) / 60000)) : null;
+  el.innerHTML = `<span class="dot"></span><span>${e.ultima ? "Última consulta " + hace(e.ultima) : "Sin consultas aún"}${mins !== null ? ` · próxima en ${mins} min` : ""}</span>`;
+}
+
+function render() {
+  renderStatus();
+  const grid = document.getElementById("grid");
+  grid.innerHTML = "";
+  data.vigilancias.forEach(w => grid.appendChild(card(w)));
+}
+
+function card(w) {
+  const el = document.createElement("article");
+  el.className = "card";
+  const main = w.series.find(s => s.principal) || w.series[0];
+  const hist = w.historial[main.clave] || [];
+  const vals = hist.map(h => h[1]).filter(v => v != null);
+  const cur = hist.length ? hist[hist.length - 1][1] : null;
+  const prevArr = hist.slice(0, -1).filter(h => h[1] != null);
+  const prev = prevArr.length ? prevArr[prevArr.length - 1][1] : null;
+  let delta = "";
+  if (cur != null && prev != null) {
+    const d = cur - prev;
+    delta = d < 0 ? `<span class="delta down" aria-label="bajó">▼ bajó ${fmt(-d)}</span>`
+          : d > 0 ? `<span class="delta up" aria-label="subió">▲ subió ${fmt(d)}</span>`
+          : `<span class="delta same">= sin cambios</span>`;
+  }
+  const first0 = vals[0], min = Math.min(...vals), max = Math.max(...vals);
+  const desde = cur != null && first0 != null ? cur - first0 : null;
+  const rappi = cur != null ? Math.round(cur * w.rappi.ratio) : null;
+  const run = w.ultima_corrida;
+
+  el.innerHTML = `
+    <div class="head">
+      <div><div class="route">${w.titulo}</div><div class="dates">${w.fechas}</div></div>
+      <div class="tag">Google Flights</div>
+    </div>
+    <div class="hero">
+      <div class="hero-label">${main.nombre}</div>
+      ${cur != null ? `<div class="price">${fmt(cur)}</div>` : `<div class="price na">${hist.length ? "No disponible" : "Esperando la primera consulta"}</div>`}
+      ${delta}
+    </div>
+    <div class="stats">
+      <div class="stat"><b>${vals.length ? fmt(min) : "—"}</b><span>mínimo visto</span></div>
+      <div class="stat"><b>${vals.length ? fmt(max) : "—"}</b><span>máximo visto</span></div>
+      <div class="stat"><b>${desde == null ? "—" : (desde > 0 ? "+" : desde < 0 ? "−" : "") + fmt(Math.abs(desde))}</b><span>desde que empecé a vigilar</span></div>
+    </div>
+    ${rappi ? `<div class="rappi">En Rappi con PRO ≈ <strong>${fmt(rappi)}</strong> · 6 cuotas de <strong>${fmt(rappi / 6)}</strong><br>${w.rappi.nota}</div>` : ""}
+    <div class="legend">${w.series.map((s, k) => {
+      const h = w.historial[s.clave] || [], v = h.length ? h[h.length - 1][1] : null;
+      return `<span><i style="background:var(${SERIES[k]})"></i>${s.nombre}<b>${v != null ? fmt(v) : "—"}</b></span>`;
+    }).join("")}</div>
+    <div class="chart"></div>
+    <div class="foot">
+      <span>${run ? (run.ok ? "Actualizado " + hace(run.ts) : `<span class="err">Falló la última consulta (${hace(run.ts)}). Reintento en la próxima.</span>`) : ""}</span>
+      <span>${(run?.urls || []).map((u, k, a) => `<a href="${u}" target="_blank" rel="noopener">Abrir en Google Flights${a.length > 1 ? (k ? " (regreso)" : " (ida)") : ""}</a>`).join(" · ")}</span>
+    </div>`;
+  chart(el.querySelector(".chart"), w);
+  return el;
+}
+
+function chart(box, w) {
+  const series = w.series.map((s, k) => ({ ...s, color: css(SERIES[k]), pts: (w.historial[s.clave] || []).map(([t, v]) => ({ t: +new Date(t), v })) }));
+  const all = series.flatMap(s => s.pts.filter(p => p.v != null));
+  const times = [...new Set(series.flatMap(s => s.pts.map(p => p.t)))].sort((a, b) => a - b);
+  const W = box.clientWidth || 560, H = 190, L = 62, R = 12, T = 10, B = 26;
+  const NS = "http://www.w3.org/2000/svg";
+  const svg = document.createElementNS(NS, "svg");
+  svg.setAttribute("viewBox", `0 0 ${W} ${H}`);
+  svg.setAttribute("role", "img");
+  svg.setAttribute("aria-label", `Historial de precios: ${w.titulo}, ${w.fechas}`);
+  box.appendChild(svg);
+  if (!all.length) {
+    box.insertAdjacentHTML("beforeend", `<div class="empty">Aquí aparece la gráfica cuando haya datos</div>`);
+    return;
+  }
+  let lo = Math.min(...all.map(p => p.v)), hi = Math.max(...all.map(p => p.v));
+  const pad = Math.max((hi - lo) * 0.12, hi * 0.01);
+  lo -= pad; hi += pad;
+  const t0 = times[0], t1 = times[times.length - 1];
+  const x = t => times.length === 1 ? (L + W - R) / 2 : L + (t - t0) / (t1 - t0) * (W - L - R);
+  const y = v => T + (hi - v) / (hi - lo) * (H - T - B);
+  const el = (tag, attrs, parent = svg) => { const e = document.createElementNS(NS, tag); for (const k in attrs) e.setAttribute(k, attrs[k]); parent.appendChild(e); return e; };
+
+  for (let i = 0; i <= 3; i++) {
+    const v = lo + (hi - lo) * i / 3, yy = y(v);
+    el("line", { x1: L, x2: W - R, y1: yy, y2: yy, stroke: css("--grid"), "stroke-width": 1 });
+    const tx = el("text", { x: L - 8, y: yy + 4, "text-anchor": "end", "font-size": 11, fill: css("--text-muted") });
+    tx.textContent = short(v);
+  }
+  const ticks = times.length === 1 ? [t0] : [t0, t1];
+  ticks.forEach((t, i) => {
+    const tx = el("text", { x: x(t), y: H - 6, "text-anchor": times.length === 1 ? "middle" : i ? "end" : "start", "font-size": 11, fill: css("--text-muted") });
+    tx.textContent = fecha(t);
+  });
+
+  // Dibujamos al revés para que la serie principal quede encima.
+  [...series].reverse().forEach(s => {
+    let d = "", pen = false;
+    s.pts.forEach(p => {
+      if (p.v == null) { pen = false; return; }
+      d += (pen ? "L" : "M") + x(p.t).toFixed(1) + "," + y(p.v).toFixed(1);
+      pen = true;
+    });
+    if (d) el("path", { d, fill: "none", stroke: s.color, "stroke-width": s.principal ? 2.5 : 2, "stroke-linejoin": "round", "stroke-linecap": "round", opacity: s.principal ? 1 : .85 });
+    const last = [...s.pts].reverse().find(p => p.v != null);
+    if (last) el("circle", { cx: x(last.t), cy: y(last.v), r: 4, fill: s.color, stroke: css("--surface-1"), "stroke-width": 2 });
+  });
+
+  // Capa de hover: línea guía y tooltip con todas las series.
+  const guide = el("line", { y1: T, y2: H - B, stroke: css("--text-muted"), "stroke-width": 1, "stroke-dasharray": "3 3", opacity: 0 });
+  const dots = series.map(s => el("circle", { r: 4.5, fill: s.color, stroke: css("--surface-1"), "stroke-width": 2, opacity: 0 }));
+  const tip = document.createElement("div");
+  tip.className = "tip";
+  box.appendChild(tip);
+  const hit = el("rect", { x: L, y: 0, width: W - L - R, height: H, fill: "transparent" });
+  hit.addEventListener("mousemove", ev => {
+    const r = svg.getBoundingClientRect(), mx = (ev.clientX - r.left) * W / r.width;
+    let t = times[0];
+    for (const tt of times) if (Math.abs(x(tt) - mx) < Math.abs(x(t) - mx)) t = tt;
+    guide.setAttribute("x1", x(t)); guide.setAttribute("x2", x(t)); guide.setAttribute("opacity", .7);
+    let rows = "", topY = H;
+    series.forEach((s, k) => {
+      const p = s.pts.find(p => p.t === t);
+      if (p && p.v != null) {
+        dots[k].setAttribute("cx", x(t)); dots[k].setAttribute("cy", y(p.v)); dots[k].setAttribute("opacity", 1);
+        topY = Math.min(topY, y(p.v));
+      } else dots[k].setAttribute("opacity", 0);
+      rows += `<div><i style="background:${s.color}"></i>${s.nombre}: <b>${p && p.v != null ? fmt(p.v) : "no disponible"}</b></div>`;
+    });
+    tip.innerHTML = `<div class="t">${fecha(t)}</div>${rows}`;
+    const px = x(t) / W * r.width;
+    tip.style.left = Math.min(Math.max(px, tip.offsetWidth / 2), r.width - tip.offsetWidth / 2) + "px";
+    tip.style.top = Math.max(topY / H * r.height - 10, tip.offsetHeight) + "px";
+    tip.style.opacity = 1;
+  });
+  hit.addEventListener("mouseleave", () => { tip.style.opacity = 0; guide.setAttribute("opacity", 0); dots.forEach(d => d.setAttribute("opacity", 0)); });
+}
+
+document.getElementById("now").onclick = async () => {
+  await fetch("/api/consultar", { method: "POST" });
+  setTimeout(load, 800);
+};
+document.getElementById("test").onclick = () => fetch("/api/probar-notificacion", { method: "POST" });
+let resizeT;
+addEventListener("resize", () => { clearTimeout(resizeT); resizeT = setTimeout(() => data && render(), 150); });
+load();
+setInterval(() => data?.estado.consultando ? load() : renderStatus(), 5000);
+setInterval(load, 60000);
+</script>
+</body>
+</html>
