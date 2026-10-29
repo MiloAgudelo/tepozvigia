@@ -12,6 +12,6 @@ export default defineConfig({
 			TELEGRAM_TOKEN: bindings.secret(),
 			TELEGRAM_CHAT: bindings.secret(),
 		},
-		triggers: [triggers.scheduled({ schedule: "*/30 * * * *" })],
+		triggers: [triggers.scheduled({ schedule: "*/5 * * * *" })],
 	},
 });
