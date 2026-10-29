@@ -12,6 +12,7 @@ export default defineConfig({
 			TELEGRAM_TOKEN: bindings.secret(),
 			TELEGRAM_CHAT: bindings.secret(),
 		},
+		domains: ["iltvuelos.miloagudelo.com"],
 		triggers: [triggers.scheduled({ schedule: "*/5 * * * *" })],
 	},
 });

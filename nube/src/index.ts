@@ -175,7 +175,7 @@ async function barrer() {
 	const combos = await siguientes(CONFIG.barrido.por_ejecucion);
 	await setEstado("ultima_ejecucion", nowIso());
 	if (!combos.length) return;
-	const origen = (await getEstado("origen")) ?? "";
+	const origen = CONFIG.panel;
 	let sesion: string | undefined;
 	try {
 		sesion = await sesionTu360();
@@ -266,10 +266,7 @@ export default {
 	async fetch(request, _env, ctx) {
 		const url = new URL(request.url);
 		if (url.pathname === "/api/datos" && request.method === "GET") {
-			const datos = await apiDatos();
-			// El cron no conoce la URL pública del tablero; se guarda para el enlace de las alertas.
-			ctx.waitUntil(setEstado("origen", url.origin));
-			return json(datos);
+			return json(await apiDatos());
 		}
 		if (url.pathname === "/api/historial" && request.method === "GET") {
 			const combo = url.searchParams.get("combo") ?? "";
@@ -284,7 +281,7 @@ export default {
 			if (fila && Date.now() - Date.parse(fila.ultima) < ESPERA_MANUAL_MS)
 				return json({ ok: false, motivo: "Esta combinación se consultó hace menos de 3 minutos." }, 429);
 			// Se espera la consulta completa: waitUntil se corta 30 s después de responder.
-			const r = await refrescar(combo, undefined, url.origin);
+			const r = await refrescar(combo, undefined, CONFIG.panel);
 			return json({ ok: r.fuentes.length > 0, ...r });
 		}
 		if (url.pathname === "/api/probar-notificacion" && request.method === "POST") {
@@ -292,7 +289,7 @@ export default {
 			const prueba = await getEstado("ultima_prueba");
 			if (prueba && Date.now() - Date.parse(prueba) < 60_000) return json({ ok: false, detalle: "Espera un minuto." }, 429);
 			await setEstado("ultima_prueba", nowIso());
-			const r = await notificar("tepozvigia", "Así se ven las alertas.", url.origin);
+			const r = await notificar("tepozvigia", "Así se ven las alertas.", CONFIG.panel);
 			return json(r, r.ok ? 200 : 502);
 		}
 		return new Response("No encontrado", { status: 404 });
