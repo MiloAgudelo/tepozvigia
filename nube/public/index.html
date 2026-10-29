@@ -1,347 +1,123 @@
 <!doctype html>
-<html lang="es">
+<html lang="es-CO">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Vigía de vuelos · Tepoztlán</title>
-<style>
-  :root {
-    color-scheme: light;
-    --bg: #f4f2ee;
-    --surface-1: #fcfcfb;
-    --border: #e4e1da;
-    --grid: #ebe8e1;
-    --text-primary: #0b0b0b;
-    --text-secondary: #52514e;
-    --text-muted: #85837d;
-    --series-1: #2a78d6;
-    --series-2: #eb6834;
-    --series-3: #1baf7a;
-    --series-4: #eda100;
-    --good: #0a7d0a;
-    --critical: #c22f2f;
-    --accent: #2a78d6;
-    --shadow: 0 1px 2px rgba(20, 18, 10, .05), 0 8px 24px -12px rgba(20, 18, 10, .12);
-  }
-  @media (prefers-color-scheme: dark) {
-    :root {
-      color-scheme: dark;
-      --bg: #121211;
-      --surface-1: #1a1a19;
-      --border: #2c2c2a;
-      --grid: #262624;
-      --text-primary: #f0efec;
-      --text-secondary: #c3c2b7;
-      --text-muted: #8d8c85;
-      --series-1: #3987e5;
-      --series-2: #d95926;
-      --series-3: #199e70;
-      --series-4: #c98500;
-      --good: #3cc63c;
-      --critical: #ef6a6a;
-      --accent: #5598e7;
-      --shadow: none;
-    }
-  }
-  * { box-sizing: border-box; }
-  body {
-    margin: 0; background: var(--bg); color: var(--text-primary);
-    font: 15px/1.45 "Segoe UI Variable Text", "Segoe UI", system-ui, sans-serif;
-    font-variant-numeric: tabular-nums;
-  }
-  .wrap { max-width: 1240px; margin: 0 auto; padding: 32px 24px 64px; }
-  header {
-    display: flex; flex-wrap: wrap; gap: 16px 24px; align-items: end; justify-content: space-between;
-    margin-bottom: 28px;
-  }
-  h1 { font: 600 28px/1.15 "Segoe UI Variable Display", "Segoe UI", system-ui, sans-serif; margin: 0; letter-spacing: -.01em; }
-  .sub { color: var(--text-secondary); margin-top: 6px; }
-  .controls { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
-  .status { color: var(--text-secondary); font-size: 13px; display: flex; align-items: center; gap: 8px; }
-  .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--good); }
-  .dot.busy { background: var(--accent); animation: pulse 1s ease-in-out infinite; }
-  @keyframes pulse { 50% { opacity: .3; } }
-  button {
-    font: inherit; font-size: 14px; border-radius: 8px; padding: 8px 14px; cursor: pointer;
-    border: 1px solid var(--border); background: var(--surface-1); color: var(--text-primary);
-  }
-  button.primary { background: var(--accent); border-color: var(--accent); color: #fff; font-weight: 600; }
-  button:disabled { opacity: .55; cursor: default; }
-  button:focus-visible, a:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
-
-  .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(540px, 1fr)); gap: 20px; }
-  @media (max-width: 620px) { .grid { grid-template-columns: 1fr; } }
-  .card {
-    background: var(--surface-1); border: 1px solid var(--border); border-radius: 14px;
-    padding: 20px 22px 16px; box-shadow: var(--shadow); display: flex; flex-direction: column; gap: 14px;
-  }
-  .card.principal { border-color: color-mix(in srgb, var(--accent) 45%, var(--border)); }
-  .head { display: flex; justify-content: space-between; gap: 12px; }
-  .route { font-weight: 600; font-size: 16px; }
-  .dates { color: var(--text-secondary); font-size: 13px; }
-  .tag { font-size: 12px; color: var(--text-muted); white-space: nowrap; }
-  .hero { display: flex; align-items: baseline; flex-wrap: wrap; gap: 6px 14px; }
-  .price { font: 600 36px/1 "Segoe UI Variable Display", "Segoe UI", system-ui, sans-serif; letter-spacing: -.02em; }
-  .price.na { font-size: 22px; color: var(--text-muted); }
-  .delta { font-size: 14px; font-weight: 600; display: inline-flex; gap: 4px; align-items: center; }
-  .delta.down { color: var(--good); }
-  .delta.up { color: var(--critical); }
-  .delta.same { color: var(--text-muted); font-weight: 500; }
-  .hero-label { width: 100%; font-size: 13px; color: var(--text-secondary); }
-  .stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
-  .stat { border-top: 1px solid var(--border); padding-top: 8px; }
-  .stat b { display: block; font-size: 15px; font-weight: 600; }
-  .stat span { font-size: 12px; color: var(--text-muted); }
-  .rappi { font-size: 13px; color: var(--text-secondary); background: var(--bg); border-radius: 8px; padding: 8px 10px; }
-  .rappi strong { color: var(--text-primary); }
-  .legend { display: flex; flex-wrap: wrap; gap: 6px 18px; font-size: 13px; color: var(--text-secondary); }
-  .legend i { display: inline-block; width: 14px; height: 3px; border-radius: 2px; vertical-align: middle; margin-right: 6px; }
-  .legend b { color: var(--text-primary); font-weight: 600; margin-left: 4px; }
-  .chart { position: relative; }
-  .chart svg { display: block; width: 100%; height: 190px; overflow: visible; }
-  .chart .empty { position: absolute; inset: 0; display: grid; place-items: center; font-size: 13px; color: var(--text-muted); pointer-events: none; text-align: center; padding: 0 30px; }
-  .tip {
-    position: absolute; pointer-events: none; background: var(--surface-1); border: 1px solid var(--border);
-    border-radius: 8px; padding: 8px 10px; font-size: 12px; box-shadow: 0 6px 20px rgba(0,0,0,.18);
-    white-space: nowrap; transform: translate(-50%, -100%); top: 0; opacity: 0; transition: opacity .08s;
-  }
-  .tip .t { color: var(--text-muted); margin-bottom: 4px; }
-  .tip div i { display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-right: 6px; }
-  .foot { display: flex; justify-content: space-between; gap: 12px; font-size: 12px; color: var(--text-muted); flex-wrap: wrap; }
-  .foot a { color: var(--accent); text-decoration: none; }
-  .foot a:hover { text-decoration: underline; }
-  .err { color: var(--critical); }
-  .note { margin-top: 28px; font-size: 13px; color: var(--text-muted); max-width: 80ch; }
-</style>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>tepozvigia · Salidas a Ciudad de México</title>
+<meta name="description" content="Tablero de precios de tiquetes a Ciudad de México para el viaje a Tepoztlán: tu360, Rappi Travel y Google Flights.">
+<meta name="theme-color" content="#07090b" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#e6e8eb" media="(prefers-color-scheme: light)">
+<link rel="icon" href="logos/favicon.svg" type="image/svg+xml">
+<link rel="preload" href="fuentes/BarlowCondensed-600.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="fuentes.css">
+<link rel="stylesheet" href="estilos.css">
+<script>
+  // Aplica el tema antes de pintar para no parpadear.
+  try { const t = localStorage.getItem("tepozvigia.tema"); if (t === "claro" || t === "oscuro") document.documentElement.dataset.theme = t === "claro" ? "light" : "dark"; } catch {}
+</script>
 </head>
 <body>
-<div class="wrap">
-  <header>
+<!--
+THESIS: El tablero de salidas del José María Córdova, pero con los precios: cada fila es un vuelo que se puede comprar, con hora, aerolínea, maleta y lo que cuesta en tu360, Rappi y Google. Rechaza la lista de tarjetas blancas de cualquier buscador.
+OWN-WORLD: Oscuro = pantalla FIDS: bisel negro, celdas grafito separadas por costuras de 1 px, letras condensadas en mayúsculas, horas y precios en amarillo de aeropuerto, la fila elegida invertida en amarillo. Claro = señalética de terminal de día: paneles gris claro, tinta negra, franjas amarillas con texto negro. Barlow Condensed para el tablero, Barlow para el texto.
+STORY: Llegas desde una alerta de Telegram o abres el tablero para decidir; ves de inmediato la mejor salida y cuánto cuesta en cada canal para tu grupo, comparas fechas en la tabla, filtras por maleta, origen, aerolínea y canal, y abres el canal para comprar.
+FIRST VIEWPORT: Arriba la cabecera del tablero con las palabras guía del tramo; debajo, a todo el ancho, la fila de filtros como pestañas de terminal. Luego la mejor salida en grande a la izquierda (logo, vuelos, horas, maleta y tres precios por canal con el mejor invertido en amarillo) y la tabla de fechas 5×5 a la derecha. En el celular, la mejor salida ocupa el primer pantallazo.
+FORM: Tablero de salidas, candidato 1 de mi lista (IMPECCABLE’S PICK), semilla 0c0f4400. Interacción firma: los dígitos de un precio que cambia giran como paletas, una sola vez. Elevaciones: tinta reservada solo para lo elegido; palabras guía del tramo; mejor opción primero en el celular; cifras tabulares.
+FINISH: unreviewed and undocumented is unfinished; this build ends with the finish review, the verdict, DESIGN.md, and every shipping raster carrying its provenance
+-->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <symbol id="i-avion" viewBox="0 0 24 24"><path d="M10.2 13.8 4 12.5l-1.5 1.5 5 2.5 2.5 5 1.5-1.5-1.3-6.2 4.3-4.3 4.6 7.3 1.6-1.6-2.4-9.4 2.6-2.6a2 2 0 0 0-2.8-2.8l-2.6 2.6-9.4-2.4L4.6 5.2l7.3 4.6Z"/></symbol>
+    <symbol id="i-maleta" viewBox="0 0 24 24"><rect x="5" y="7" width="14" height="13" rx="2"/><path d="M9 7V4.5h6V7M9 20v1.5M15 20v1.5M9 11v5M15 11v5"/></symbol>
+    <symbol id="i-si" viewBox="0 0 24 24"><path d="m5 12.5 4.5 4.5L19 7.5"/></symbol>
+    <symbol id="i-no" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18"/></symbol>
+    <symbol id="i-duda" viewBox="0 0 24 24"><path d="M9.2 9a3 3 0 1 1 4.3 2.7c-.9.5-1.5 1.2-1.5 2.3M12 17.5v.5"/></symbol>
+    <symbol id="i-sol" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2.5v2M12 19.5v2M2.5 12h2M19.5 12h2M5.3 5.3l1.4 1.4M17.3 17.3l1.4 1.4M5.3 18.7l1.4-1.4M17.3 6.7l1.4-1.4"/></symbol>
+    <symbol id="i-luna" viewBox="0 0 24 24"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5Z"/></symbol>
+    <symbol id="i-pantalla" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="12" rx="1.5"/><path d="M8 20h8M12 16v4"/></symbol>
+    <symbol id="i-recargar" viewBox="0 0 24 24"><path d="M20 12a8 8 0 1 1-2.3-5.7M20 4v4.5h-4.5"/></symbol>
+    <symbol id="i-salir" viewBox="0 0 24 24"><path d="M14 4h6v6M20 4l-9 9M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/></symbol>
+    <symbol id="i-persona" viewBox="0 0 24 24"><circle cx="12" cy="8" r="3.5"/><path d="M5 20a7 7 0 0 1 14 0"/></symbol>
+    <symbol id="i-campana" viewBox="0 0 24 24"><path d="M6 16V11a6 6 0 0 1 12 0v5l1.5 2h-15ZM10 20.5a2 2 0 0 0 4 0"/></symbol>
+    <symbol id="i-cama" viewBox="0 0 24 24"><path d="M3 18V7M3 14h18v4M21 14v-2.5A2.5 2.5 0 0 0 18.5 9H11v5M6.5 11.5a1.5 1.5 0 1 0 0-.01"/></symbol>
+    <symbol id="i-filtro" viewBox="0 0 24 24"><path d="M4 6h16M7 12h10M10 18h4"/></symbol>
+  </defs>
+</svg>
+
+<a class="saltar" href="#mejor">Saltar a la mejor salida</a>
+
+<header class="cabecera">
+  <div class="marca">
+    <svg class="marca-icono" aria-hidden="true"><use href="#i-avion"/></svg>
     <div>
-      <h1>Vigía de vuelos · Tepoztlán</h1>
-      <div class="sub">Precios de tu360 (Bancolombia) y Google Flights, ida y vuelta, 1 adulto con maleta de mano</div>
+      <div class="marca-nombre">tepozvigia</div>
+      <div class="marca-sub">Salidas a Ciudad de México · Tepoztlán 18–23 ene 2027</div>
     </div>
-    <div class="controls">
-      <div class="status" id="status"><span class="dot"></span><span>Cargando…</span></div>
-      <button id="test" title="Manda un mensaje de prueba por Telegram">Probar alerta</button>
-      <button id="now" class="primary">Consultar ahora</button>
+  </div>
+  <p class="guia" id="guia" aria-live="polite"></p>
+  <div class="cabecera-acciones">
+    <div class="estado" id="estado"><span class="luz"></span><span>Cargando…</span></div>
+    <div class="pasajeros" role="group" aria-label="Pasajeros">
+      <svg aria-hidden="true"><use href="#i-persona"/></svg>
+      <button type="button" data-pax="1" aria-pressed="true">1</button>
+      <button type="button" data-pax="2" aria-pressed="false">2</button>
+      <button type="button" data-pax="3" aria-pressed="false">3</button>
     </div>
-  </header>
-  <div class="grid" id="grid"></div>
-  <p class="note">
-    El precio grande es el itinerario que estás pensando comprar. Si la aerolínea cambia ese vuelo o deja de venderlo,
-    aparece como «no disponible», y la línea «cualquiera, la más barata» te muestra si hay otra opción.
-    El precio de tu360 ya trae restado el 10 % de Hot Days (máximo $200.000) mientras la promoción esté vigente, y solo cuenta tarifas con maleta de mano.
-    El estimado de Rappi aplica la diferencia que vimos en el checkout el 28 de octubre sobre el precio de Google y asume Rappi PRO (sin el cargo de servicio de $100.000).
-    Te llega un mensaje de Telegram cuando el precio principal cambia $10.000 o más. Se consulta solo cada 30 minutos, a la hora en punto y a la media.
-  </p>
-</div>
+    <button type="button" class="tema" id="tema" aria-label="Cambiar tema"><svg aria-hidden="true"><use href="#i-pantalla"/></svg><span>Sistema</span></button>
+  </div>
+</header>
 
-<script>
-const fmt = n => "$" + Math.round(n).toLocaleString("es-CO");
-const short = n => n >= 1e6 ? "$" + (n / 1e6).toLocaleString("es-CO", { maximumFractionDigits: 2 }) + " M" : "$" + Math.round(n / 1e3) + " mil";
-const fecha = ts => new Date(ts).toLocaleString("es-CO", { weekday: "short", day: "numeric", month: "short", hour: "numeric", minute: "2-digit" });
-const hace = ts => {
-  const m = Math.round((Date.now() - new Date(ts)) / 60000);
-  return m < 1 ? "hace un momento" : m < 60 ? `hace ${m} min` : `hace ${Math.floor(m / 60)} h ${m % 60} min`;
-};
-const SERIES = ["--series-1", "--series-2", "--series-3", "--series-4"];
-const css = v => getComputedStyle(document.documentElement).getPropertyValue(v).trim();
+<details class="filtros-caja" id="filtros-caja" open>
+  <summary><svg aria-hidden="true"><use href="#i-filtro"/></svg> Filtros <span id="filtros-resumen"></span></summary>
+  <nav class="filtros" id="filtros" aria-label="Filtros"></nav>
+</details>
 
-let data = null;
+<main class="tablero">
+  <section class="mejor" id="mejor" aria-labelledby="mejor-titulo" tabindex="-1">
+    <h2 class="panel-titulo" id="mejor-titulo">Mejor salida</h2>
+    <div id="mejor-cuerpo"></div>
+  </section>
 
-async function load() {
-  try {
-    data = await (await fetch("/api/data")).json();
-    render();
-  } catch {
-    document.getElementById("status").innerHTML = `<span class="dot" style="background:var(--critical)"></span><span>No pude cargar los datos. Recarga la página.</span>`;
-  }
-}
-
-function renderStatus() {
-  const e = data.estado, el = document.getElementById("status");
-  const btn = document.getElementById("now");
-  btn.disabled = e.consultando;
-  if (e.consultando) {
-    el.innerHTML = `<span class="dot busy"></span><span>Consultando precios…</span>`;
-    return;
-  }
-  const mins = e.proxima ? Math.max(0, Math.round((new Date(e.proxima) - Date.now()) / 60000)) : null;
-  el.innerHTML = `<span class="dot"></span><span>${e.ultima ? "Última consulta " + hace(e.ultima) : "Sin consultas aún"}${mins !== null ? ` · próxima en ${mins} min` : ""}</span>`;
-}
-
-function render() {
-  renderStatus();
-  const grid = document.getElementById("grid");
-  grid.innerHTML = "";
-  data.vigilancias.forEach(w => grid.appendChild(card(w)));
-}
-
-function card(w) {
-  const el = document.createElement("article");
-  el.className = "card";
-  const main = w.series.find(s => s.principal) || w.series[0];
-  const hist = w.historial[main.clave] || [];
-  const vals = hist.map(h => h[1]).filter(v => v != null);
-  const cur = hist.length ? hist[hist.length - 1][1] : null;
-  const prevArr = hist.slice(0, -1).filter(h => h[1] != null);
-  const prev = prevArr.length ? prevArr[prevArr.length - 1][1] : null;
-  let delta = "";
-  if (cur != null && prev != null) {
-    const d = cur - prev;
-    delta = d < 0 ? `<span class="delta down" aria-label="bajó">▼ bajó ${fmt(-d)}</span>`
-          : d > 0 ? `<span class="delta up" aria-label="subió">▲ subió ${fmt(d)}</span>`
-          : `<span class="delta same">= sin cambios</span>`;
-  }
-  const first0 = vals[0], min = Math.min(...vals), max = Math.max(...vals);
-  const desde = cur != null && first0 != null ? cur - first0 : null;
-  const last = clave => { const h = w.historial[clave] || []; return h.length ? h[h.length - 1][1] : null; };
-  const baseRappi = w.series.find(s => s.rappi);
-  const googleCur = baseRappi ? last(baseRappi.clave) : null;
-  const rappi = googleCur != null ? Math.round(googleCur * w.rappi.ratio) : null;
-  const promo = data.tu360;
-  const esTu360 = main.fuente === "tu360";
-  const tu360Box = esTu360 && cur != null
-    ? `<div class="rappi">Con tarjeta Bancolombia: <strong>${promo.cuotas} cuotas de ${fmt(cur / promo.cuotas)}</strong> sin interés<br>${promo.vigente ? promo.nota : "La promoción Hot Days terminó: el precio ya no tiene el 10 %."}</div>`
-    : "";
-  const run = w.ultima_corrida;
-
-  el.innerHTML = `
-    <div class="head">
-      <div><div class="route">${w.titulo}</div><div class="dates">${w.fechas}</div></div>
-      <div class="tag">${w.series.some(s => s.fuente === "tu360") ? "tu360 + Google Flights" : "Google Flights"}</div>
+  <section class="fechas" aria-labelledby="fechas-titulo">
+    <div class="panel-cabeza">
+      <h2 class="panel-titulo" id="fechas-titulo">Tabla de fechas</h2>
+      <span class="panel-nota" id="fechas-nota"></span>
     </div>
-    <div class="hero">
-      <div class="hero-label">${main.nombre}${esTu360 && promo.vigente ? " · con el 10 % de Hot Days" : ""}</div>
-      ${cur != null ? `<div class="price">${fmt(cur)}</div>` : `<div class="price na">${hist.length ? "No disponible" : "Esperando la primera consulta"}</div>`}
-      ${delta}
+    <div id="matriz"></div>
+  </section>
+
+  <section class="salidas" aria-labelledby="salidas-titulo">
+    <div class="panel-cabeza">
+      <h2 class="panel-titulo" id="salidas-titulo">Salidas</h2>
+      <span class="panel-nota" id="salidas-nota"></span>
     </div>
-    <div class="stats">
-      <div class="stat"><b>${vals.length ? fmt(min) : "—"}</b><span>mínimo visto</span></div>
-      <div class="stat"><b>${vals.length ? fmt(max) : "—"}</b><span>máximo visto</span></div>
-      <div class="stat"><b>${desde == null ? "—" : (desde > 0 ? "+" : desde < 0 ? "−" : "") + fmt(Math.abs(desde))}</b><span>desde que empecé a vigilar</span></div>
+    <div id="lista"></div>
+  </section>
+
+  <section class="historial" aria-labelledby="historial-titulo">
+    <div class="panel-cabeza">
+      <h2 class="panel-titulo" id="historial-titulo">Cómo se ha movido</h2>
+      <span class="panel-nota" id="historial-nota"></span>
     </div>
-    ${tu360Box}
-    ${rappi ? `<div class="rappi">En Rappi con PRO ≈ <strong>${fmt(rappi)}</strong> · 6 cuotas de <strong>${fmt(rappi / 6)}</strong><br>${w.rappi.nota}</div>` : ""}
-    <div class="legend">${w.series.map((s, k) => {
-      const h = w.historial[s.clave] || [], v = h.length ? h[h.length - 1][1] : null;
-      return `<span><i style="background:var(${SERIES[k]})"></i>${s.nombre}<b>${v != null ? fmt(v) : "—"}</b></span>`;
-    }).join("")}</div>
-    <div class="chart"></div>
-    <div class="foot">
-      <span>${run ? (run.ok ? "Actualizado " + hace(run.ts) : `<span class="err" title="${(run.error || "").replace(/"/g, "&quot;")}">Falló ${/^(tu360|Google):/.test(run.error || "") && !/ · /.test(run.error) ? (run.error.startsWith("tu360") ? "tu360" : "Google") : "la consulta"} (${hace(run.ts)}). Reintento en la próxima.</span>`) : ""}</span>
-      <span>${(() => {
-        const urls = run?.urls || [], g = urls.filter(u => u.includes("google.com")), t = urls.filter(u => u.includes("bancolombia.com"));
-        return [
-          ...t.map(u => `<a href="${u}" target="_blank" rel="noopener">Abrir en tu360</a>`),
-          ...g.map((u, k) => `<a href="${u}" target="_blank" rel="noopener">Google Flights${g.length > 1 ? (k ? " (regreso)" : " (ida)") : ""}</a>`),
-        ].join(" · ");
-      })()}</span>
-    </div>`;
-  chart(el.querySelector(".chart"), w);
-  return el;
-}
+    <div id="grafica"></div>
+  </section>
 
-function chart(box, w) {
-  const series = w.series.map((s, k) => ({ ...s, color: css(SERIES[k]), pts: (w.historial[s.clave] || []).map(([t, v]) => ({ t: +new Date(t), v })) }));
-  const all = series.flatMap(s => s.pts.filter(p => p.v != null));
-  const times = [...new Set(series.flatMap(s => s.pts.map(p => p.t)))].sort((a, b) => a - b);
-  const W = box.clientWidth || 560, H = 190, L = 62, R = 12, T = 10, B = 26;
-  const NS = "http://www.w3.org/2000/svg";
-  const svg = document.createElementNS(NS, "svg");
-  svg.setAttribute("viewBox", `0 0 ${W} ${H}`);
-  svg.setAttribute("role", "img");
-  svg.setAttribute("aria-label", `Historial de precios: ${w.titulo}, ${w.fechas}`);
-  box.appendChild(svg);
-  if (!all.length) {
-    box.insertAdjacentHTML("beforeend", `<div class="empty">Aquí aparece la gráfica cuando haya datos</div>`);
-    return;
-  }
-  let lo = Math.min(...all.map(p => p.v)), hi = Math.max(...all.map(p => p.v));
-  const pad = Math.max((hi - lo) * 0.12, hi * 0.01);
-  lo -= pad; hi += pad;
-  const t0 = times[0], t1 = times[times.length - 1];
-  const x = t => times.length === 1 ? (L + W - R) / 2 : L + (t - t0) / (t1 - t0) * (W - L - R);
-  const y = v => T + (hi - v) / (hi - lo) * (H - T - B);
-  const el = (tag, attrs, parent = svg) => { const e = document.createElementNS(NS, tag); for (const k in attrs) e.setAttribute(k, attrs[k]); parent.appendChild(e); return e; };
+  <section class="vigilancia" aria-labelledby="vigilancia-titulo">
+    <div class="panel-cabeza">
+      <h2 class="panel-titulo" id="vigilancia-titulo">Vigilados por Telegram</h2>
+      <button type="button" class="boton-sec" id="probar"><svg aria-hidden="true"><use href="#i-campana"/></svg>Probar alerta</button>
+    </div>
+    <div id="vigilados"></div>
+  </section>
+</main>
 
-  for (let i = 0; i <= 3; i++) {
-    const v = lo + (hi - lo) * i / 3, yy = y(v);
-    el("line", { x1: L, x2: W - R, y1: yy, y2: yy, stroke: css("--grid"), "stroke-width": 1 });
-    const tx = el("text", { x: L - 8, y: yy + 4, "text-anchor": "end", "font-size": 11, fill: css("--text-muted") });
-    tx.textContent = short(v);
-  }
-  const ticks = times.length === 1 ? [t0] : [t0, t1];
-  ticks.forEach((t, i) => {
-    const tx = el("text", { x: x(t), y: H - 6, "text-anchor": times.length === 1 ? "middle" : i ? "end" : "start", "font-size": 11, fill: css("--text-muted") });
-    tx.textContent = fecha(t);
-  });
+<footer class="pie">
+  <p><strong>Cómo leer los precios.</strong> Todo es ida y vuelta, en pesos colombianos. tu360 es el precio real de Bancolombia; mientras dure Hot Days ya trae restado el 10 % (máximo $200.000 por compra). Rappi Travel es un <em>estimado</em> sobre Google con la diferencia que vimos en su checkout, y asume Rappi PRO, sin el cargo de servicio de $100.000 por pasajero. Google Flights es la referencia de la aerolínea e incluye el costo estimado de la maleta de mano. La maleta se confirma con la tarifa de tu360 del mismo vuelo; si no hay forma de saberlo dice «sin confirmar».</p>
+  <p>Cada combinación se consulta por turnos: las vigiladas cada 30 minutos y el resto cada 2 horas y media. Las tarifas son por persona y puede que no haya cupo para tres en la misma clase.</p>
+</footer>
 
-  // Dibujamos al revés para que la serie principal quede encima.
-  [...series].reverse().forEach(s => {
-    let d = "", pen = false;
-    s.pts.forEach(p => {
-      if (p.v == null) { pen = false; return; }
-      d += (pen ? "L" : "M") + x(p.t).toFixed(1) + "," + y(p.v).toFixed(1);
-      pen = true;
-    });
-    if (d) el("path", { d, fill: "none", stroke: s.color, "stroke-width": s.principal ? 2.5 : 2, "stroke-linejoin": "round", "stroke-linecap": "round", opacity: s.principal ? 1 : .85 });
-    const last = [...s.pts].reverse().find(p => p.v != null);
-    if (last) el("circle", { cx: x(last.t), cy: y(last.v), r: 4, fill: s.color, stroke: css("--surface-1"), "stroke-width": 2 });
-  });
+<div class="aviso" id="aviso" role="status" aria-live="polite" hidden></div>
 
-  // Capa de hover: línea guía y tooltip con todas las series.
-  const guide = el("line", { y1: T, y2: H - B, stroke: css("--text-muted"), "stroke-width": 1, "stroke-dasharray": "3 3", opacity: 0 });
-  const dots = series.map(s => el("circle", { r: 4.5, fill: s.color, stroke: css("--surface-1"), "stroke-width": 2, opacity: 0 }));
-  const tip = document.createElement("div");
-  tip.className = "tip";
-  box.appendChild(tip);
-  const hit = el("rect", { x: L, y: 0, width: W - L - R, height: H, fill: "transparent" });
-  hit.addEventListener("mousemove", ev => {
-    const r = svg.getBoundingClientRect(), mx = (ev.clientX - r.left) * W / r.width;
-    let t = times[0];
-    for (const tt of times) if (Math.abs(x(tt) - mx) < Math.abs(x(t) - mx)) t = tt;
-    guide.setAttribute("x1", x(t)); guide.setAttribute("x2", x(t)); guide.setAttribute("opacity", .7);
-    let rows = "", topY = H;
-    series.forEach((s, k) => {
-      const p = s.pts.find(p => p.t === t);
-      if (p && p.v != null) {
-        dots[k].setAttribute("cx", x(t)); dots[k].setAttribute("cy", y(p.v)); dots[k].setAttribute("opacity", 1);
-        topY = Math.min(topY, y(p.v));
-      } else dots[k].setAttribute("opacity", 0);
-      rows += `<div><i style="background:${s.color}"></i>${s.nombre}: <b>${p && p.v != null ? fmt(p.v) : "no disponible"}</b></div>`;
-    });
-    tip.innerHTML = `<div class="t">${fecha(t)}</div>${rows}`;
-    const px = x(t) / W * r.width;
-    tip.style.left = Math.min(Math.max(px, tip.offsetWidth / 2), r.width - tip.offsetWidth / 2) + "px";
-    tip.style.top = Math.max(topY / H * r.height - 10, tip.offsetHeight) + "px";
-    tip.style.opacity = 1;
-  });
-  hit.addEventListener("mouseleave", () => { tip.style.opacity = 0; guide.setAttribute("opacity", 0); dots.forEach(d => d.setAttribute("opacity", 0)); });
-}
-
-function aviso(texto) {
-  const el = document.getElementById("status");
-  el.innerHTML = `<span class="dot"></span><span>${texto}</span>`;
-  setTimeout(renderStatus, 4000);
-}
-document.getElementById("now").onclick = async () => {
-  data.estado.consultando = true;
-  renderStatus();
-  const r = await fetch("/api/consultar", { method: "POST" });
-  if (r.status === 429) { data.estado.consultando = false; return aviso("Ya se consultó hace menos de 5 minutos."); }
-  load();
-};
-document.getElementById("test").onclick = async () => {
-  const r = await fetch("/api/probar-notificacion", { method: "POST" });
-  aviso(r.ok ? "Alerta de prueba enviada a Telegram." : "No se pudo enviar la alerta (o espera un minuto para otra prueba).");
-};
-let resizeT;
-addEventListener("resize", () => { clearTimeout(resizeT); resizeT = setTimeout(() => data && render(), 150); });
-load();
-setInterval(() => data?.estado.consultando ? load() : renderStatus(), 5000);
-setInterval(load, 60000);
-</script>
+<script src="app.js" type="module"></script>
 </body>
 </html>
