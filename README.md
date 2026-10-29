@@ -16,7 +16,7 @@ Vigía de precios de tiquetes para un viaje a Tepoztlán (México) en enero de 2
   - Filtros por origen, fechas, maleta, escalas, aeropuerto, aerolínea y canal de compra.
   - De 1 a 3 pasajeros, con la opción de sumar las noches extra.
   - El descuento de tu360 (Hot Days, 10 % con tope de $200.000 por compra) se aplica sobre el total del grupo.
-  - Modo claro, oscuro o el del sistema.
+  - Solo modo claro.
   - El diseño está en [DESIGN.md](DESIGN.md) y el contexto del producto en [PRODUCT.md](PRODUCT.md).
 - **Alertas:** mensaje de Telegram cuando un vuelo de `alertas` cambia $10.000 o más por persona, o deja de aparecer. El mensaje enlaza al tablero en esa fecha.
 - **Secretos del Worker:** `TELEGRAM_TOKEN` (token del bot) y `TELEGRAM_CHAT` (chat al que escribe).

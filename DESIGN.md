@@ -4,22 +4,22 @@ El tablero lleva la identidad del sitio del **Interamerican Leadership Training*
 
 ## Color
 
-Tokens en `estilos.css` (`:root`, con `prefers-color-scheme` y `data-theme` para el selector Sistema / Claro / Oscuro, guardado en `localStorage`). Los valores claros salen de la hoja de estilos del sitio del ILT.
+Tokens en `estilos.css` (`:root`). Solo hay modo claro, por decisión del usuario; los valores salen de la hoja de estilos del sitio del ILT.
 
-| Rol | Claro | Oscuro | Uso |
-|---|---|---|---|
-| `--fondo` | `#f9fafb` | `#0f0a1c` | Fondo de la página |
-| `--panel` / `--celda` | `#ffffff` | `#171026` / `#1d1530` | Tarjetas y casillas |
-| `--celda-2` / `--lavanda` | `#f5f3ff` / `#ede9fe` | `#251b3d` / `#2e2150` | Chips, ruta, fila elegida, etiquetas |
-| `--borde` | `#e9e5f5` | `#2f2447` | Bordes de 1 px |
-| `--texto` / `--texto-2` / `--tenue` | `#111827` / `#4b5563` / `#6b7280` | `#f5f3ff` / `#cfc6e6` / `#9c92b8` | Tinta |
-| `--morado` | `#7c3aed` | `#8b5cf6` | Acción principal, chip activo, canal ganador, fecha más barata |
-| `--morado-texto` | `#6d28d9` | `#c4b5fd` | Etiquetas, precios destacados, enlaces secundarios |
-| `--banda-1` → `--banda-2` | `#581c87` → `#7e22ce` | `#3b0f63` → `#6b21a8` | Franja superior, canal ganador, avisos |
-| `--bueno` / `--malo` | `#15803d` / `#dc2626` | `#4ade80` / `#f87171` | Maleta incluida o no, bajadas y subidas. Siempre con ícono y texto. |
-| `--serie-1/2/3` | paleta validada de dataviz | | Gráfica: tu360, Rappi, Google |
+| Rol | Valor | Uso |
+|---|---|---|
+| `--fondo` | `#f9fafb` | Fondo de la página |
+| `--panel` / `--celda` | `#ffffff` | Tarjetas y casillas |
+| `--celda-2` / `--lavanda` | `#f5f3ff` / `#ede9fe` | Chips, ruta, fila elegida, etiquetas |
+| `--borde` | `#e9e5f5` | Bordes de 1 px |
+| `--texto` / `--texto-2` / `--tenue` | `#111827` / `#4b5563` / `#6b7280` | Tinta |
+| `--morado` | `#7c3aed` | Acción principal, chip activo, canal ganador, fecha más barata |
+| `--morado-texto` | `#6d28d9` | Etiquetas, precios destacados, enlaces secundarios |
+| `--banda-1` → `--banda-2` | `#581c87` → `#7e22ce` | Franja superior, canal ganador, avisos |
+| `--bueno` / `--malo` | `#15803d` / `#dc2626` | Maleta incluida o no, bajadas y subidas. Siempre con ícono y texto. |
+| `--serie-1/2/3` | paleta validada de dataviz | Gráfica: tu360, Rappi, Google |
 
-La tabla de fechas usa una sola rampa de morado: la fecha más barata en morado pleno con texto blanco, y el resto entre 10 % y 55 % de mezcla con texto oscuro (en modo oscuro, texto blanco).
+La tabla de fechas usa una sola rampa de morado: la fecha más barata en morado pleno con texto blanco, y el resto entre 10 % y 55 % de mezcla con texto oscuro.
 
 ## Tipografía
 
@@ -30,7 +30,7 @@ La tabla de fechas usa una sola rampa de morado: la fecha más barata en morado 
 
 ## Piezas
 
-- **Barra superior blanca:** palabra ILT en morado (enlaza al sitio), «Interamerican Leadership Training · tepozvigia · vuelos», estado del barrido, selector de pasajeros y de tema en píldoras.
+- **Barra superior blanca:** palabra ILT en morado (enlaza al sitio), «Interamerican Leadership Training · tepozvigia · vuelos», estado del barrido y selector de pasajeros en píldoras.
 - **Franja morada en degradé:**
   - Arriba, la fecha y el lugar del evento entre rayas.
   - Al centro, el tramo que se está viendo en grande: origen · ida → regreso · pasajeros.
@@ -61,7 +61,7 @@ Por debajo de 760 px:
 
 ## Origen de los recursos
 
-- **ILT:** `logos/ilt.png`, la palabra ILT oficial (`Logos ILT/Iconos/ILT.png`). En modo oscuro se invierte a blanco.
+- **ILT:** `logos/ilt.png`, la palabra ILT oficial (`Logos ILT/Iconos/ILT.png`).
 - **World Scouting:** `logos/world-scouting-blanco.png`, del archivo oficial `Logos ILT/Principal/WOSM.png`, recortado a su contenido con 4 px de margen.
 - **Logos de aerolíneas:** `logos/{código}.png`, de `https://www.gstatic.com/flights/airline_logos/70px/{código}.png`.
 - **Bancolombia:** `logos/bancolombia.svg`, de bancolombia.com. Se pinta como máscara con `currentColor`.

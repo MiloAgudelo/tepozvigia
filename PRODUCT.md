@@ -57,4 +57,4 @@ Junta en un solo lugar precios que ningún buscador muestra juntos: el precio re
 
 ## Accessibility & Inclusion
 
-Funciona en celular y computador. Identidad y estado nunca dependen solo del color (maleta con ícono y texto). Modo claro y oscuro.
+Funciona en celular y computador. Identidad y estado nunca dependen solo del color (maleta con ícono y texto). Solo modo claro, por decisión del usuario.

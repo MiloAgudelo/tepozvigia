@@ -562,25 +562,6 @@ function pintarPasajeros() {
   }
 }
 
-const TEMAS = [["sistema", "pantalla", "Sistema"], ["claro", "sol", "Claro"], ["oscuro", "luna", "Oscuro"]];
-function pintarTema() {
-  let t = "sistema";
-  try { t = localStorage.getItem("tepozvigia.tema") || "sistema"; } catch {}
-  const [, ic, txt] = TEMAS.find((x) => x[0] === t) ?? TEMAS[0];
-  if (t === "sistema") delete document.documentElement.dataset.theme;
-  else document.documentElement.dataset.theme = t === "claro" ? "light" : "dark";
-  $("tema").innerHTML = `${icono(ic)}<span>${txt}</span>`;
-  $("tema").setAttribute("aria-label", `Tema: ${txt}. Cambiar tema`);
-}
-$("tema").onclick = () => {
-  let t = "sistema";
-  try { t = localStorage.getItem("tepozvigia.tema") || "sistema"; } catch {}
-  const sig = TEMAS[(TEMAS.findIndex((x) => x[0] === t) + 1) % TEMAS.length][0];
-  try { localStorage.setItem("tepozvigia.tema", sig); } catch {}
-  pintarTema();
-  if (datos) pintar();
-};
-matchMedia("(prefers-color-scheme: light)").addEventListener("change", () => datos && pintar());
 
 $("probar").onclick = async () => {
   const r = await fetch("/api/probar-notificacion", { method: "POST" }).catch(() => null);
@@ -591,6 +572,5 @@ $("probar").onclick = async () => {
 let redimension;
 addEventListener("resize", () => { clearTimeout(redimension); redimension = setTimeout(() => datos && pintar(), 200); });
 
-pintarTema();
 cargar();
 setInterval(cargar, 60e3);

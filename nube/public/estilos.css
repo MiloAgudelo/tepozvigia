@@ -31,58 +31,6 @@
   --curva: cubic-bezier(.16, 1, .3, 1);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root:where(:not([data-theme="light"])) {
-    color-scheme: dark;
-    --fondo: #0f0a1c;
-    --panel: #171026;
-    --celda: #1d1530;
-    --celda-2: #251b3d;
-    --lavanda: #2e2150;
-    --borde: #2f2447;
-    --texto: #f5f3ff;
-    --texto-2: #cfc6e6;
-    --tenue: #9c92b8;
-    --morado: #8b5cf6;
-    --morado-hondo: #7c3aed;
-    --morado-texto: #c4b5fd;
-    --banda-1: #3b0f63;
-    --banda-2: #6b21a8;
-    --bueno: #4ade80;
-    --malo: #f87171;
-    --serie-1: #3987e5;
-    --serie-2: #d95926;
-    --serie-3: #199e70;
-    --foco: #c4b5fd;
-    --sombra: 0 1px 0 rgba(255, 255, 255, .03) inset, 0 16px 32px -18px rgba(0, 0, 0, .8);
-    --sombra-boton: 0 8px 22px -8px rgba(139, 92, 246, .6);
-  }
-}
-:root[data-theme="dark"] {
-  color-scheme: dark;
-  --fondo: #0f0a1c;
-  --panel: #171026;
-  --celda: #1d1530;
-  --celda-2: #251b3d;
-  --lavanda: #2e2150;
-  --borde: #2f2447;
-  --texto: #f5f3ff;
-  --texto-2: #cfc6e6;
-  --tenue: #9c92b8;
-  --morado: #8b5cf6;
-  --morado-hondo: #7c3aed;
-  --morado-texto: #c4b5fd;
-  --banda-1: #3b0f63;
-  --banda-2: #6b21a8;
-  --bueno: #4ade80;
-  --malo: #f87171;
-  --serie-1: #3987e5;
-  --serie-2: #d95926;
-  --serie-3: #199e70;
-  --foco: #c4b5fd;
-  --sombra: 0 1px 0 rgba(255, 255, 255, .03) inset, 0 16px 32px -18px rgba(0, 0, 0, .8);
-  --sombra-boton: 0 8px 22px -8px rgba(139, 92, 246, .6);
-}
 
 * { box-sizing: border-box; }
 html { background: var(--fondo); overflow-x: clip; }
@@ -125,8 +73,6 @@ h2 { margin: 0; }
 }
 .marca { display: flex; align-items: center; gap: 14px; text-decoration: none; }
 .marca-ilt { height: 30px; width: auto; display: block; }
-:root[data-theme="dark"] .marca-ilt { filter: brightness(0) invert(1); }
-@media (prefers-color-scheme: dark) { :root:where(:not([data-theme="light"])) .marca-ilt { filter: brightness(0) invert(1); } }
 .marca-texto { border-left: 1px solid var(--borde); padding-left: 14px; line-height: 1.2; }
 .marca-texto > span { display: inline; }
 .marca-sub { margin-left: 6px; }
@@ -148,12 +94,6 @@ h2 { margin: 0; }
   font-weight: 700; font-size: 13px; color: var(--texto-2);
 }
 .pasajeros button[aria-pressed="true"] { background: var(--morado); color: #fff; }
-.tema {
-  display: inline-flex; align-items: center; gap: 6px; height: 36px; padding: 0 14px; border-radius: 999px;
-  border: 1px solid var(--borde); background: var(--celda-2); font-weight: 600; font-size: 13px; color: var(--morado-texto);
-}
-.tema svg { width: 16px; height: 16px; }
-.tema:hover { border-color: var(--morado); }
 
 /* ---------- franja morada (la del sitio, con la fecha del evento) ---------- */
 .banda {
@@ -313,8 +253,6 @@ h2 { margin: 0; }
   transition: transform .25s var(--curva), box-shadow .25s;
 }
 .celda[data-fuerte="1"] { color: #fff; }
-:root[data-theme="dark"] .celda { color: #fff; }
-@media (prefers-color-scheme: dark) { :root:where(:not([data-theme="light"])) .celda { color: #fff; } }
 .celda:hover { transform: translateY(-2px); box-shadow: 0 10px 20px -12px rgba(88, 28, 135, .6); }
 .celda[aria-pressed="true"] { box-shadow: 0 0 0 2px var(--panel), 0 0 0 4px var(--morado); z-index: 1; }
 .celda-precio { font-size: 12.5px; font-weight: 800; letter-spacing: -.02em; }
@@ -323,8 +261,6 @@ h2 { margin: 0; }
 .celda.con-origen { padding-top: 18px; }
 .celda-origen { position: absolute; top: 5px; left: 8px; font-size: 9.5px; font-weight: 800; letter-spacing: .08em; opacity: .75; }
 .celda.sin { background: var(--celda-2); color: var(--tenue); font-size: 11.5px; box-shadow: inset 0 0 0 1px var(--borde); }
-:root[data-theme="dark"] .celda.sin { color: var(--tenue); }
-@media (prefers-color-scheme: dark) { :root:where(:not([data-theme="light"])) .celda.sin { color: var(--tenue); } }
 .leyenda-matriz { display: flex; align-items: center; gap: 10px; margin-top: 14px; font-size: 12px; color: var(--tenue); flex-wrap: wrap; }
 .rampa { width: 110px; height: 8px; border-radius: 999px; background: linear-gradient(90deg, color-mix(in oklab, var(--morado) 12%, var(--celda-2)), color-mix(in oklab, var(--morado) 70%, var(--celda-2)) 85%, var(--morado) 85%); }
 
@@ -411,8 +347,6 @@ h2 { margin: 0; }
   .marca-texto { display: none; }
   .marca-ilt { height: 26px; }
   .estado span:last-child { display: none; }
-  .tema span { display: none; }
-  .tema { padding: 0 10px; }
   .pasajeros > svg { display: none; }
   .pasajeros button { min-width: 28px; padding: 0 7px; }
   .banda { padding: 18px 14px 20px; }
