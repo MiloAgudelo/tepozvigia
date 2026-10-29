@@ -30,7 +30,7 @@ La tabla de fechas usa una sola rampa de morado: la fecha más barata en morado 
 
 ## Piezas
 
-- **Barra superior blanca:** palabra ILT en morado (enlaza al sitio), «Interamerican Leadership Training · tepozvigia · vuelos», estado del barrido y selector de pasajeros en píldoras.
+- **Barra superior blanca:** emblema circular del ILT y la palabra ILT en morado (enlazan al sitio), «Interamerican Leadership Training · tepozvigia · vuelos», estado del barrido y selector de pasajeros en píldoras.
 - **Franja morada en degradé:**
   - Arriba, la fecha y el lugar del evento entre rayas.
   - Al centro, el tramo que se está viendo en grande: origen · ida → regreso · pasajeros.
@@ -67,6 +67,6 @@ Por debajo de 760 px:
 - **Bancolombia:** `logos/bancolombia.svg`, de bancolombia.com. Se pinta como máscara con `currentColor`.
 - **Rappi Travel:** `logos/rappi-travel.svg`, de `https://images.rappi.com/web/travel/rappi-travel-logo-full.svg`.
 - **Google Flights:** `logos/google-flights.png`, de `https://www.gstatic.com/images/branding/product/2x/travel_flights_48dp.png`.
-- **Favicon:** `logos/favicon.svg`, dibujado para este proyecto.
+- **Emblema y favicon:** `logos/ilt-emblema.png`, el emblema circular oficial (`Logos ILT/Principal/ilt-logo.png`); `favicon-32.png` y `apple-touch-icon.png` se generan de él.
 
 Los logos se usan solo para identificar el evento y de dónde sale cada precio.

@@ -73,6 +73,7 @@ h2 { margin: 0; }
 }
 .marca { display: flex; align-items: center; gap: 14px; text-decoration: none; }
 .marca-ilt { height: 30px; width: auto; display: block; }
+.marca-emblema { width: 40px; height: 40px; display: block; flex: none; margin-right: -4px; }
 .marca-texto { border-left: 1px solid var(--borde); padding-left: 14px; line-height: 1.2; }
 .marca-texto > span { display: inline; }
 .marca-sub { margin-left: 6px; }
@@ -346,6 +347,7 @@ h2 { margin: 0; }
   .cabecera { position: static; padding: 10px 14px; }
   .marca-texto { display: none; }
   .marca-ilt { height: 26px; }
+  .marca-emblema { width: 34px; height: 34px; }
   .estado span:last-child { display: none; }
   .pasajeros > svg { display: none; }
   .pasajeros button { min-width: 28px; padding: 0 7px; }
