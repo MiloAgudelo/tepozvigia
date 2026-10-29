@@ -1,0 +1,287 @@
+{
+  "maleta_de_mano": 1,
+  "notificar_si_cambia_mas_de_cop": 10000,
+  "vigilancias": [
+    {
+      "id": "mde-17-24",
+      "titulo": "Medellín ⇄ Ciudad de México",
+      "fechas": "dom 17 → dom 24 ene",
+      "consultas": [
+        {
+          "trip": "round-trip",
+          "legs": [
+            [
+              "MDE",
+              "MEX",
+              "2027-01-17"
+            ],
+            [
+              "MEX",
+              "MDE",
+              "2027-01-24"
+            ]
+          ],
+          "tfs": "GhoSCjIwMjctMDEtMTdqBRIDTURFcgUSA01FWBoaEgoyMDI3LTAxLTI0agUSA01FWHIFEgNNREVCAQFIAWoEEAEYAJgBAQ=="
+        }
+      ],
+      "series": [
+        {
+          "clave": "tu360-copa",
+          "nombre": "tu360 · Copa 09:15 (CM398)",
+          "fuente": "tu360",
+          "vuelos": [
+            [
+              "CM398"
+            ]
+          ],
+          "principal": true
+        },
+        {
+          "clave": "copa",
+          "nombre": "Google · Copa 09:15 (CM398)",
+          "vuelos": [
+            [
+              "CM398"
+            ]
+          ],
+          "rappi": true,
+          "alerta": true
+        },
+        {
+          "clave": "avianca",
+          "nombre": "Google · Avianca, la más barata",
+          "aerolinea": "Avianca"
+        },
+        {
+          "clave": "min",
+          "nombre": "Google · cualquiera, la más barata"
+        }
+      ],
+      "rappi": {
+        "ratio": 1.0,
+        "nota": "En Rappi, Copa salió igual que en Google (28-oct)"
+      },
+      "consultas_tu360": [
+        {
+          "legs": [
+            [
+              "MDE",
+              "MEX",
+              "2027-01-17"
+            ],
+            [
+              "MEX",
+              "MDE",
+              "2027-01-24"
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "id": "mde-18-24",
+      "titulo": "Medellín ⇄ Ciudad de México",
+      "fechas": "lun 18 → dom 24 ene",
+      "consultas": [
+        {
+          "trip": "round-trip",
+          "legs": [
+            [
+              "MDE",
+              "MEX",
+              "2027-01-18"
+            ],
+            [
+              "MEX",
+              "MDE",
+              "2027-01-24"
+            ]
+          ],
+          "tfs": "GhoSCjIwMjctMDEtMThqBRIDTURFcgUSA01FWBoaEgoyMDI3LTAxLTI0agUSA01FWHIFEgNNREVCAQFIAWoEEAEYAJgBAQ=="
+        }
+      ],
+      "series": [
+        {
+          "clave": "tu360-copa",
+          "nombre": "tu360 · Copa 08:35 (CM164)",
+          "fuente": "tu360",
+          "vuelos": [
+            [
+              "CM164"
+            ]
+          ],
+          "principal": true
+        },
+        {
+          "clave": "copa",
+          "nombre": "Google · Copa 08:35 (CM164)",
+          "vuelos": [
+            [
+              "CM164"
+            ]
+          ],
+          "rappi": true,
+          "alerta": true
+        },
+        {
+          "clave": "avianca",
+          "nombre": "Google · Avianca, la más barata",
+          "aerolinea": "Avianca"
+        },
+        {
+          "clave": "min",
+          "nombre": "Google · cualquiera, la más barata"
+        }
+      ],
+      "rappi": {
+        "ratio": 1.0,
+        "nota": "En Rappi, Copa salió igual que en Google (28-oct)"
+      },
+      "consultas_tu360": [
+        {
+          "legs": [
+            [
+              "MDE",
+              "MEX",
+              "2027-01-18"
+            ],
+            [
+              "MEX",
+              "MDE",
+              "2027-01-24"
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "id": "pei-17-23",
+      "titulo": "Pereira ⇄ Ciudad de México",
+      "fechas": "dom 17 → sáb 23 ene",
+      "consultas": [
+        {
+          "trip": "round-trip",
+          "legs": [
+            [
+              "PEI",
+              "MEX",
+              "2027-01-17"
+            ],
+            [
+              "MEX",
+              "PEI",
+              "2027-01-23"
+            ]
+          ],
+          "tfs": "GhoSCjIwMjctMDEtMTdqBRIDUEVJcgUSA01FWBoaEgoyMDI3LTAxLTIzagUSA01FWHIFEgNQRUlCAQFIAWoEEAEYAJgBAQ=="
+        }
+      ],
+      "series": [
+        {
+          "clave": "tu360-avianca",
+          "nombre": "tu360 · Avianca 16:00 (AV9240)",
+          "fuente": "tu360",
+          "vuelos": [
+            [
+              "AV9240",
+              "AV186"
+            ]
+          ],
+          "principal": true
+        },
+        {
+          "clave": "avianca",
+          "nombre": "Google · Avianca 16:00 (AV9240)",
+          "vuelos": [
+            [
+              "AV9240",
+              "AV186"
+            ]
+          ],
+          "rappi": true,
+          "alerta": true
+        },
+        {
+          "clave": "min",
+          "nombre": "Google · cualquiera, la más barata"
+        }
+      ],
+      "rappi": {
+        "ratio": 1.027,
+        "nota": "En Rappi, Avianca salió 2,7 % más cara que en Google (28-oct)"
+      },
+      "consultas_tu360": [
+        {
+          "legs": [
+            [
+              "PEI",
+              "MEX",
+              "2027-01-17"
+            ],
+            [
+              "MEX",
+              "PEI",
+              "2027-01-23"
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "id": "viva-18-24",
+      "titulo": "Medellín ⇄ AIFA (Viva, dos solo ida)",
+      "fechas": "lun 18 → dom 24 ene",
+      "consultas": [
+        {
+          "trip": "one-way",
+          "legs": [
+            [
+              "MDE",
+              "NLU",
+              "2027-01-18"
+            ]
+          ],
+          "tfs": "GhoSCjIwMjctMDEtMThqBRIDTURFcgUSA05MVUIBAUgBagQQARgAmAEC"
+        },
+        {
+          "trip": "one-way",
+          "legs": [
+            [
+              "NLU",
+              "MDE",
+              "2027-01-24"
+            ]
+          ],
+          "tfs": "GhoSCjIwMjctMDEtMjRqBRIDTkxVcgUSA01ERUIBAUgBagQQARgAmAEC"
+        }
+      ],
+      "series": [
+        {
+          "clave": "viva",
+          "nombre": "Google · VB835 + VB834",
+          "vuelos": [
+            [
+              "VB835"
+            ],
+            [
+              "VB834"
+            ]
+          ],
+          "principal": true,
+          "rappi": true
+        }
+      ],
+      "rappi": {
+        "ratio": 1.258,
+        "nota": "En Rappi, Viva salió 26 % más cara y sin maleta de mano (28-oct)"
+      }
+    }
+  ],
+  "tu360": {
+    "descuento_pct": 10,
+    "descuento_max": 200000,
+    "descuento_hasta": "2026-10-31T23:59:59-05:00",
+    "cuotas": 4,
+    "nota": "Hot Days: 10 % menos (máx. $200.000) y hasta 4 cuotas sin interés con tarjetas Bancolombia, hasta el 31 de octubre"
+  }
+}
