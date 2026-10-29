@@ -1,6 +1,6 @@
 # tepozvigia
 
-Vigía de precios de tiquetes para un viaje a Tepoztlán (México) en enero de 2027. Consulta por turnos Google Flights y tu360 viajes de Bancolombia para todas las combinaciones de origen y fechas, muestra un tablero tipo pantalla de salidas de aeropuerto con filtros, y avisa por Telegram cuando se mueve el precio de los vuelos vigilados.
+Vigía de precios de tiquetes para un viaje a Tepoztlán (México) en enero de 2027. Consulta por turnos Google Flights y tu360 viajes de Bancolombia para todas las combinaciones de origen y fechas, muestra un tablero con la identidad del Interamerican Leadership Training y filtros, y avisa por Telegram cuando se mueve el precio de los vuelos vigilados.
 
 ## En la nube (lo que está en uso)
 

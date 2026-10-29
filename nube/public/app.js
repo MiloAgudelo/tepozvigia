@@ -1,4 +1,4 @@
-// tepozvigia · tablero de salidas. Todo el filtrado se hace aquí con los datos de /api/datos.
+// tepozvigia · vuelos al ILT México 2027. Todo el filtrado se hace aquí con los datos de /api/datos.
 
 const $ = (id) => document.getElementById(id);
 const h = (s) => String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]);
@@ -54,7 +54,9 @@ function estadoInicial() {
     fueraAero: [],
     canales: ["tu360", "rappi"],
     pax: 1,
-    noches: { sumar: false, valor: 120000 },
+    // Comparar fechas es comparar costo total: las noches extra se suman por defecto.
+    noches: { sumar: true, valor: 120000 },
+    version: 2,
     sel: { fecha: null, fila: null },
     todas: false,
   };
@@ -70,6 +72,8 @@ function cargarEstado() {
       base.idas = base.idas.filter((d) => rango(...config.idas).includes(d));
       if (!base.idas.length) base.idas = rango(...config.idas);
       base.aTiempo ??= true;
+      // Versión 2: las noches extra pasan a sumarse por defecto.
+      if (guardado.version !== 2) { base.noches = { ...base.noches, sumar: true }; base.version = 2; }
     }
   } catch {}
   // Enlace de una alerta: #MDE/2027-01-17/2027-01-24
@@ -167,8 +171,8 @@ function rappiUrl(f) {
 function pintarCabecera(f) {
   const pax = `${estado.pax} ${estado.pax === 1 ? "pasajero" : "pasajeros"}`;
   $("guia").textContent = f
-    ? `${CIUDADES[f.origen]} · ${dia(f.ida)} → ${dia(f.regreso)} ene · ${pax}`
-    : `Salidas a Ciudad de México · ${pax}`;
+    ? `${CIUDADES[f.origen]} · ${diaLargo(f.ida)} → ${diaLargo(f.regreso)} · ${pax}`
+    : `Vuelos al ILT México 2027 · ${pax}`;
   const combos = Object.values(datos.combos);
   const frescos = combos.filter((c) => c.ultima && Date.now() - Date.parse(c.ultima) < 3 * 3600e3).length;
   const conError = combos.filter((c) => c.google?.ok === false || c.tu360?.ok === false).length;
@@ -214,11 +218,11 @@ function pintarMejor(f) {
       <span>${icono("persona")}${estado.pax} ${estado.pax === 1 ? "pasajero" : "pasajeros"}</span>
     </div>
     <div class="canales">
-      ${canal("tu360", `<span class="logo-banco" role="img" aria-label="Bancolombia"></span>`, t.vigente && f.t != null ? "−10 % Hot Days" : "", f.precios.tu360,
+      ${canal("tu360", `<span class="logo-banco" role="img" aria-label="Bancolombia"></span>`, t.vigente && f.t != null ? "−10 %" : "", f.precios.tu360,
         `${t.cuotas} cuotas de ${fmt((f.precios.tu360 ?? 0) / t.cuotas)} sin interés${porPersona(f.precios.tu360 ?? 0)}`)}
       ${canal("rappi", `<img class="logo-rappi" src="logos/rappi-travel.svg" alt="Rappi Travel" height="20">`, "Estimado", f.precios.rappi,
         `${config.rappi.cuotas} cuotas de ${fmt((f.precios.rappi ?? 0) / config.rappi.cuotas)} con RappiCard · sin PRO +${fmt(config.rappi.cargo_servicio * estado.pax)}`)}
-      ${canal("google", `<img class="logo-google" src="logos/google-flights.png" alt="" width="20" height="20"><span class="nombre-google">Google Flights</span>`, "Referencia", f.precios.google,
+      ${canal("google", `<img class="logo-google" src="logos/google-flights.png" alt="" width="20" height="20"><span class="nombre-google">Google</span>`, "Referencia", f.precios.google,
         `Precio de la aerolínea con maleta estimada${porPersona(f.precios.google ?? 0)}`)}
     </div>
     <div class="acciones">
@@ -255,7 +259,7 @@ function pintarMatriz(filas, sel) {
         html += `<button type="button" class="celda sin" disabled title="${!activa ? "Fecha fuera del filtro" : consultada ? "Ninguna opción cumple los filtros" : "Todavía en cola para consultar"}">${!activa ? "—" : consultada ? "Sin opciones" : "En cola"}</button>`;
         continue;
       }
-      // La más barata va en amarillo pleno; el resto, de tenue a medio, para que el texto siga legible.
+      // La más barata va en morado pleno; el resto, de tenue a medio, para que el texto siga legible.
       const intensidad = f.orden === lo ? 1 : 0.1 + 0.45 * (1 - (f.orden - lo) / (hi - lo));
       const n = f.noches;
       html += `<button type="button" class="celda${estancia ? " estancia" : ""}${variosOrigenes ? " con-origen" : ""}" style="--intensidad:${intensidad.toFixed(3)}" data-fuerte="${intensidad > 0.9 ? 1 : 0}" data-fecha="${k}" aria-pressed="${sel === k}"
@@ -369,7 +373,7 @@ async function pintarGrafica(f) {
   let svg = "";
   for (let i = 0; i <= 3; i++) {
     const v = lo + ((hi - lo) * i) / 3, yy = y(v);
-    svg += `<line x1="${L}" x2="${W - R}" y1="${yy}" y2="${yy}" stroke="${css("--costura")}" stroke-width="1"/><text x="${L - 8}" y="${yy + 4}" text-anchor="end" font-size="11" fill="${css("--tenue")}">${corto(v)}</text>`;
+    svg += `<line x1="${L}" x2="${W - R}" y1="${yy}" y2="${yy}" stroke="${css("--borde")}" stroke-width="1"/><text x="${L - 8}" y="${yy + 4}" text-anchor="end" font-size="11" fill="${css("--tenue")}">${corto(v)}</text>`;
   }
   svg += `<text x="${L}" y="${H - 6}" font-size="11" fill="${css("--tenue")}">${fecha(t0)}</text><text x="${W - R}" y="${H - 6}" text-anchor="end" font-size="11" fill="${css("--tenue")}">${fecha(t1)}</text>`;
   for (const s of [...visibles].reverse()) {

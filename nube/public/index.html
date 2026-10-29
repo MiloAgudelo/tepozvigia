@@ -3,12 +3,12 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>tepozvigia · Salidas a Ciudad de México</title>
-<meta name="description" content="Tablero de precios de tiquetes a Ciudad de México para el viaje a Tepoztlán: tu360, Rappi Travel y Google Flights.">
-<meta name="theme-color" content="#07090b" media="(prefers-color-scheme: dark)">
-<meta name="theme-color" content="#e6e8eb" media="(prefers-color-scheme: light)">
+<title>tepozvigia · Vuelos al ILT México 2027</title>
+<meta name="description" content="Tablero de precios de tiquetes para llegar al Interamerican Leadership Training en Tepoztlán: tu360, Rappi Travel y Google Flights.">
+<meta name="theme-color" content="#171026" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
 <link rel="icon" href="logos/favicon.svg" type="image/svg+xml">
-<link rel="preload" href="fuentes/BarlowCondensed-600.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="fuentes/Inter.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="fuentes.css">
 <link rel="stylesheet" href="estilos.css">
 <script>
@@ -18,11 +18,11 @@
 </head>
 <body>
 <!--
-THESIS: El tablero de salidas del José María Córdova, pero con los precios: cada fila es un vuelo que se puede comprar, con hora, aerolínea, maleta y lo que cuesta en tu360, Rappi y Google. Rechaza la lista de tarjetas blancas de cualquier buscador.
-OWN-WORLD: Oscuro = pantalla FIDS: bisel negro, celdas grafito separadas por costuras de 1 px, letras condensadas en mayúsculas, horas y precios en amarillo de aeropuerto, la fila elegida invertida en amarillo. Claro = señalética de terminal de día: paneles gris claro, tinta negra, franjas amarillas con texto negro. Barlow Condensed para el tablero, Barlow para el texto.
+THESIS: Un tablero para llegar al ILT México 2027 que se siente parte del sitio del evento: la mejor salida, su precio en cada canal y la tabla de fechas, con la identidad del Interamerican Leadership Training.
+OWN-WORLD: La del sitio iar-ilt.scout.org: morado de Scouts (#7c3aed, franja #581c87 → #7e22ce), blanco, tinta #111827, Inter de 400 a 800, botones en píldora, tarjetas con esquinas de 16 px y sombra morada suave, etiquetas en mayúsculas espaciadas y moradas. Oscuro: el mismo morado sobre un violeta casi negro.
 STORY: Llegas desde una alerta de Telegram o abres el tablero para decidir; ves de inmediato la mejor salida y cuánto cuesta en cada canal para tu grupo, comparas fechas en la tabla, filtras por maleta, origen, aerolínea y canal, y abres el canal para comprar.
-FIRST VIEWPORT: Arriba la cabecera del tablero con las palabras guía del tramo; debajo, a todo el ancho, la fila de filtros como pestañas de terminal. Luego la mejor salida en grande a la izquierda (logo, vuelos, horas, maleta y tres precios por canal con el mejor invertido en amarillo) y la tabla de fechas 5×5 a la derecha. En el celular, la mejor salida ocupa el primer pantallazo.
-FORM: Tablero de salidas, candidato 1 de mi lista (IMPECCABLE’S PICK), semilla 0c0f4400. Interacción firma: los dígitos de un precio que cambia giran como paletas, una sola vez. Elevaciones: tinta reservada solo para lo elegido; palabras guía del tramo; mejor opción primero en el celular; cifras tabulares.
+FIRST VIEWPORT: Barra blanca con el logo ILT; franja morada con la fecha del evento y el tramo que estás viendo en grande; filtros en píldoras; la mejor salida a la izquierda con el canal ganador en morado y la tabla de fechas en rampa morada a la derecha. En el celular, la mejor salida ocupa el primer pantallazo.
+FORM: Identidad fijada por el usuario (sitio del ILT); reemplaza el tablero de salidas anterior. Interacción firma: los dígitos de un precio que cambia giran una vez.
 FINISH: unreviewed and undocumented is unfinished; this build ends with the finish review, the verdict, DESIGN.md, and every shipping raster carrying its provenance
 -->
 <svg width="0" height="0" style="position:absolute" aria-hidden="true">
@@ -47,14 +47,13 @@ FINISH: unreviewed and undocumented is unfinished; this build ends with the fini
 <a class="saltar" href="#mejor">Saltar a la mejor salida</a>
 
 <header class="cabecera">
-  <div class="marca">
-    <svg class="marca-icono" aria-hidden="true"><use href="#i-avion"/></svg>
-    <div>
-      <div class="marca-nombre">tepozvigia</div>
-      <div class="marca-sub">Salidas a Ciudad de México · Tepoztlán desde el 18 de enero de 2027</div>
-    </div>
-  </div>
-  <p class="guia" id="guia" aria-live="polite"></p>
+  <a class="marca" href="https://iar-ilt.scout.org/es" target="_blank" rel="noopener" title="Sitio del Interamerican Leadership Training">
+    <img class="marca-ilt" src="logos/ilt.png" alt="ILT" width="51" height="30">
+    <span class="marca-texto">
+      <span class="marca-nombre">Interamerican Leadership Training</span>
+      <span class="marca-sub">tepozvigia · vuelos</span>
+    </span>
+  </a>
   <div class="cabecera-acciones">
     <div class="estado" id="estado"><span class="luz"></span><span>Cargando…</span></div>
     <div class="pasajeros" role="group" aria-label="Pasajeros">
@@ -66,6 +65,14 @@ FINISH: unreviewed and undocumented is unfinished; this build ends with the fini
     <button type="button" class="tema" id="tema" aria-label="Cambiar tema"><svg aria-hidden="true"><use href="#i-pantalla"/></svg><span>Sistema</span></button>
   </div>
 </header>
+
+<section class="banda" aria-label="Tramo que estás viendo">
+  <div class="banda-dentro">
+    <p class="banda-fecha">18 al 23 de enero de 2027 · Tepoztlán, México</p>
+    <h1 class="guia" id="guia" aria-live="polite">Vuelos al ILT México 2027</h1>
+    <div class="banda-pie"><span>Hay que aterrizar antes del 18 · precios de tu360, Rappi Travel y Google Flights</span><img src="logos/world-scouting-blanco.png" alt="World Scouting" height="26" width="84"></div>
+  </div>
+</section>
 
 <details class="filtros-caja" id="filtros-caja" open>
   <summary><svg aria-hidden="true"><use href="#i-filtro"/></svg> Filtros <span id="filtros-resumen"></span></summary>

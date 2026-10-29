@@ -39,6 +39,7 @@ Junta en un solo lugar precios que ningún buscador muestra juntos: el precio re
 ## Brand Commitments
 
 - Nombre: tepozvigia.
+- La herramienta lleva la identidad visual del sitio del Interamerican Leadership Training (iar-ilt.scout.org): morado de Scouts, Inter, píldoras y la franja morada del evento. Lo pidió el usuario.
 - Se muestran los logos de las aerolíneas y de los canales (Bancolombia/tu360, Rappi Travel, Google Flights) como identificación del origen de cada precio.
 
 ## Evidence on Hand
