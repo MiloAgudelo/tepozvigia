@@ -124,11 +124,14 @@ h2 { margin: 0; }
   position: sticky; top: 0; z-index: 5;
 }
 .marca { display: flex; align-items: center; gap: 14px; text-decoration: none; }
-.marca-emblema { width: 40px; height: 40px; display: block; flex: none; }
+.marca-ilt { height: 30px; width: auto; display: block; }
+:root[data-theme="dark"] .marca-ilt { filter: brightness(0) invert(1); }
+@media (prefers-color-scheme: dark) { :root:where(:not([data-theme="light"])) .marca-ilt { filter: brightness(0) invert(1); } }
 .marca-texto { border-left: 1px solid var(--borde); padding-left: 14px; line-height: 1.2; }
-.marca-texto > span { display: block; }
+.marca-texto > span { display: inline; }
+.marca-sub { margin-left: 6px; }
 .marca-nombre { font-size: 13px; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; }
-.marca-sub { font-size: 11.5px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--morado-texto); margin-top: 2px; }
+.marca-sub { font-size: 11.5px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--morado-texto); }
 .cabecera-acciones { display: flex; align-items: center; gap: 10px; }
 .estado { display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--tenue); white-space: nowrap; }
 .luz { width: 8px; height: 8px; border-radius: 50%; background: var(--bueno); box-shadow: 0 0 0 3px color-mix(in oklab, var(--bueno) 20%, transparent); }
@@ -406,6 +409,7 @@ h2 { margin: 0; }
   body { font-size: 14.5px; }
   .cabecera { position: static; padding: 10px 14px; }
   .marca-texto { display: none; }
+  .marca-ilt { height: 26px; }
   .estado span:last-child { display: none; }
   .tema span { display: none; }
   .tema { padding: 0 10px; }

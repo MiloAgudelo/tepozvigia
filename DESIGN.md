@@ -30,7 +30,7 @@ La tabla de fechas usa una sola rampa de morado: la fecha más barata en morado 
 
 ## Piezas
 
-- **Barra superior blanca:** emblema circular del ILT (enlaza al sitio), «Interamerican Leadership Training · tepozvigia · vuelos», estado del barrido, selector de pasajeros y de tema en píldoras.
+- **Barra superior blanca:** palabra ILT en morado (enlaza al sitio), «Interamerican Leadership Training · tepozvigia · vuelos», estado del barrido, selector de pasajeros y de tema en píldoras.
 - **Franja morada en degradé:**
   - Arriba, la fecha y el lugar del evento entre rayas.
   - Al centro, el tramo que se está viendo en grande: origen · ida → regreso · pasajeros.
@@ -55,13 +55,13 @@ Cuando un precio cambia, sus dígitos giran una vez (`.paletas.gira`, 420 ms, es
 
 Por debajo de 760 px:
 
-- La barra muestra solo el emblema del ILT y los controles.
+- La barra muestra solo la palabra ILT y los controles.
 - La mejor salida ocupa casi todo el primer pantallazo y las casillas de canal se apilan.
 - Cada fila de salidas muestra solo el precio del canal ganador.
 
 ## Origen de los recursos
 
-- **ILT:** `logos/ilt-emblema.png`, el emblema circular oficial (`Logos ILT/Principal/ilt-logo.png`).
+- **ILT:** `logos/ilt.png`, la palabra ILT oficial (`Logos ILT/Iconos/ILT.png`). En modo oscuro se invierte a blanco.
 - **World Scouting:** `logos/world-scouting-blanco.png`, del archivo oficial `Logos ILT/Principal/WOSM.png`, recortado a su contenido con 4 px de margen.
 - **Logos de aerolíneas:** `logos/{código}.png`, de `https://www.gstatic.com/flights/airline_logos/70px/{código}.png`.
 - **Bancolombia:** `logos/bancolombia.svg`, de bancolombia.com. Se pinta como máscara con `currentColor`.
