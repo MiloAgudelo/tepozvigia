@@ -1,0 +1,62 @@
+{
+  "intervalo_minutos": 30,
+  "puerto": 8765,
+  "maleta_de_mano": 1,
+  "notificar_si_cambia_mas_de_cop": 10000,
+  "vigilancias": [
+    {
+      "id": "mde-17-24",
+      "titulo": "Medellín ⇄ Ciudad de México",
+      "fechas": "dom 17 → dom 24 ene",
+      "consultas": [
+        {"trip": "round-trip", "legs": [["MDE", "MEX", "2027-01-17"], ["MEX", "MDE", "2027-01-24"]]}
+      ],
+      "series": [
+        {"clave": "copa", "nombre": "Copa 09:15 (CM398)", "vuelos": [["CM398"]], "principal": true},
+        {"clave": "avianca", "nombre": "Avianca, la más barata", "aerolinea": "Avianca"},
+        {"clave": "min", "nombre": "Cualquiera, la más barata"}
+      ],
+      "rappi": {"ratio": 1.0, "nota": "En Rappi, Copa salió igual que en Google (28-oct)"}
+    },
+    {
+      "id": "mde-18-24",
+      "titulo": "Medellín ⇄ Ciudad de México",
+      "fechas": "lun 18 → dom 24 ene",
+      "consultas": [
+        {"trip": "round-trip", "legs": [["MDE", "MEX", "2027-01-18"], ["MEX", "MDE", "2027-01-24"]]}
+      ],
+      "series": [
+        {"clave": "copa", "nombre": "Copa 08:35 (CM164)", "vuelos": [["CM164"]], "principal": true},
+        {"clave": "avianca", "nombre": "Avianca, la más barata", "aerolinea": "Avianca"},
+        {"clave": "min", "nombre": "Cualquiera, la más barata"}
+      ],
+      "rappi": {"ratio": 1.0, "nota": "En Rappi, Copa salió igual que en Google (28-oct)"}
+    },
+    {
+      "id": "pei-17-23",
+      "titulo": "Pereira ⇄ Ciudad de México",
+      "fechas": "dom 17 → sáb 23 ene",
+      "consultas": [
+        {"trip": "round-trip", "legs": [["PEI", "MEX", "2027-01-17"], ["MEX", "PEI", "2027-01-23"]]}
+      ],
+      "series": [
+        {"clave": "avianca", "nombre": "Avianca 16:00 (AV9240)", "vuelos": [["AV9240", "AV186"]], "principal": true},
+        {"clave": "min", "nombre": "Cualquiera, la más barata"}
+      ],
+      "rappi": {"ratio": 1.027, "nota": "En Rappi, Avianca salió 2,7 % más cara que en Google (28-oct)"}
+    },
+    {
+      "id": "viva-18-24",
+      "titulo": "Medellín ⇄ AIFA (Viva, dos solo ida)",
+      "fechas": "lun 18 → dom 24 ene",
+      "consultas": [
+        {"trip": "one-way", "legs": [["MDE", "NLU", "2027-01-18"]]},
+        {"trip": "one-way", "legs": [["NLU", "MDE", "2027-01-24"]]}
+      ],
+      "series": [
+        {"clave": "viva", "nombre": "VB835 + VB834", "vuelos": [["VB835"], ["VB834"]], "principal": true}
+      ],
+      "rappi": {"ratio": 1.258, "nota": "En Rappi, Viva salió 26 % más cara y sin maleta de mano (28-oct)"}
+    }
+  ]
+}
