@@ -1,0 +1,13 @@
+# Versión local
+.venv/
+__pycache__/
+historial.sqlite
+vigia.log
+vigia.pid
+
+# Worker
+node_modules/
+.cloudflare/
+.wrangler/
+.dev.vars*
+.env*
