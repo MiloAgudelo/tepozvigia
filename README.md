@@ -6,7 +6,7 @@ Vigía de precios de tiquetes para un viaje a Tepoztlán (México) en enero de 2
 
 - **Tablero:** https://tepozvigia.milo-agudelo.workers.dev
 - **Dónde corre:** Worker `tepozvigia` en Cloudflare (plan gratuito), con un cron cada 5 minutos y la base D1 `vigia-vuelos`.
-- **Matriz:** 75 combinaciones. Orígenes Medellín, Pereira y Bogotá; ida del 14 al 18 de enero; regreso del 23 al 27. Destino Ciudad de México o AIFA.
+- **Matriz:** 60 combinaciones. Orígenes Medellín, Pereira y Bogotá; ida del 14 al 17 de enero (el evento empieza el 18 y hay que llegar antes); regreso del 23 al 27. Destino Ciudad de México o AIFA. El filtro «Llega antes del 18» descarta los vuelos que aterrizan en la madrugada del 18.
 - **Barrido:** cada ejecución consulta las 4 combinaciones más atrasadas. Las `prioritarias` (en `nube/src/config.json`) se repiten cada 30 minutos y el resto cada 150. Así cabe en los límites del plan gratuito: 50 peticiones externas por ejecución y 100.000 escrituras diarias en D1.
 - **Fuentes:**
   - Google Flights: lee el payload `ds:1` de la página de resultados. Una sola búsqueda trae CDMX y AIFA, porque `tfs.py` repite el aeropuerto en el protobuf. El precio incluye la maleta de mano estimada por Google.

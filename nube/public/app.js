@@ -48,6 +48,8 @@ function estadoInicial() {
     regresos: rango(...config.regresos),
     maleta: "incluida",
     directo: false,
+    // El evento empieza el 18: por defecto solo cuentan los vuelos que aterrizan antes.
+    aTiempo: true,
     llegada: [...config.destinos],
     fueraAero: [],
     canales: ["tu360", "rappi"],
@@ -62,7 +64,13 @@ function cargarEstado() {
   const base = estadoInicial();
   try {
     const guardado = JSON.parse(localStorage.getItem(CLAVE) || "null");
-    if (guardado) Object.assign(base, guardado, { sel: { fecha: null, fila: null }, todas: false });
+    if (guardado) {
+      Object.assign(base, guardado, { sel: { fecha: null, fila: null }, todas: false });
+      // Las fechas guardadas que ya no están en la matriz (como la ida del 18) se descartan.
+      base.idas = base.idas.filter((d) => rango(...config.idas).includes(d));
+      if (!base.idas.length) base.idas = rango(...config.idas);
+      base.aTiempo ??= true;
+    }
   } catch {}
   // Enlace de una alerta: #MDE/2027-01-17/2027-01-24
   const m = location.hash.match(/^#([A-Z]{3})\/(\d{4}-\d{2}-\d{2})\/(\d{4}-\d{2}-\d{2})/);
@@ -130,6 +138,7 @@ function filasFiltradas() {
     .filter((f) => e.origenes.includes(f.origen) && e.idas.includes(f.ida) && e.regresos.includes(f.regreso))
     .filter((f) => (e.maleta === "incluida" ? f.m === true : true))
     .filter((f) => (e.directo ? f.it.e === 0 : true))
+    .filter((f) => (e.aTiempo ? f.it.l < config.llegar_antes_de : true))
     .filter((f) => e.llegada.includes(f.it.d))
     .filter((f) => !e.fueraAero.includes(f.code))
     .map(conPrecios)
@@ -257,7 +266,7 @@ function pintarMatriz(filas, sel) {
       </button>`;
     }
   }
-  html += `</div><div class="leyenda-matriz"><span>Más caro</span><span class="rampa"></span><span>Más barato</span><span>· Mejor precio de cada fecha con los filtros${estado.noches.sumar ? ", sumando noches extra" : ""}. La raya marca el 18 → 23.</span></div>`;
+  html += `</div><div class="leyenda-matriz"><span>Más caro</span><span class="rampa"></span><span>Más barato</span><span>· Mejor precio de cada fecha con los filtros${estado.noches.sumar ? ", sumando noches extra" : ""}.</span></div>`;
   $("matriz").innerHTML = html;
   $("fechas-nota").textContent = `${estado.pax} ${estado.pax === 1 ? "pasajero" : "pasajeros"}, ida y vuelta`;
   for (const b of $("matriz").querySelectorAll("[data-fecha]")) b.onclick = () => { estado.sel = { fecha: b.dataset.fecha, fila: null }; pintar(); };
@@ -434,6 +443,7 @@ function pintarFiltros() {
     grupo("Ida", rango(...config.idas).map((d) => chip("idas", d, dia(d), e.idas.includes(d))).join("")),
     grupo("Regreso", rango(...config.regresos).map((d) => chip("regresos", d, dia(d), e.regresos.includes(d))).join("")),
     grupo("Maleta de mano", chip("maleta", "incluida", `${icono("maleta")}Incluida`, e.maleta === "incluida") + chip("maleta", "todas", "Da igual", e.maleta === "todas")),
+    grupo("Llegada", chip("aTiempo", "si", "Antes del 18", e.aTiempo) + chip("aTiempo", "no", "Da igual", !e.aTiempo)),
     grupo("Escalas", chip("directo", "no", "Todas", !e.directo) + chip("directo", "si", "Solo directos", e.directo)),
     grupo("Llego a", chip("llegada", "MEX", "AICM <small>CDMX</small>", e.llegada.includes("MEX")) + chip("llegada", "NLU", "AIFA", e.llegada.includes("NLU"))),
     grupo("Aerolíneas", aerosVistos.map((c) => chip("aero", c, `${LOGOS.has(c) ? `<img src="logos/${c}.png" alt="" width="20" height="20">` : ""}${h(nombreAero(c))}`, !e.fueraAero.includes(c))).join("") || `<span class="chip" aria-disabled="true">Cargando…</span>`),
@@ -452,6 +462,7 @@ function pintarFiltros() {
     if (g === "origenes" || g === "idas" || g === "regresos" || g === "llegada" || g === "canales") multi(e[g], v);
     else if (g === "maleta") e.maleta = v;
     else if (g === "directo") e.directo = v === "si";
+    else if (g === "aTiempo") e.aTiempo = v === "si";
     else if (g === "aero") { const i = e.fueraAero.indexOf(v); i >= 0 ? e.fueraAero.splice(i, 1) : e.fueraAero.push(v); }
     else if (g === "noches") e.noches.sumar = !e.noches.sumar;
     e.sel = { fecha: null, fila: null };
@@ -468,6 +479,7 @@ function pintarFiltros() {
     `${e.origenes.join(", ")}`,
     `${e.idas.length * e.regresos.length} fechas`,
     e.maleta === "incluida" ? "con maleta" : "",
+    e.aTiempo ? "llega antes del 18" : "",
     e.directo ? "directos" : "",
     e.canales.map((c) => (c === "tu360" ? "tu360" : c === "rappi" ? "Rappi" : "Google")).join(" + "),
   ].filter(Boolean).join(" · ");

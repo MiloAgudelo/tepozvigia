@@ -20,11 +20,11 @@ Junta en un solo lugar precios que ningún buscador muestra juntos: el precio re
 
 ## Operating Context
 
-- Estancia fija en Tepoztlán del 18 al 23 de enero de 2027. Se acepta salir hasta 4 días antes (14–18) y volver hasta 4 días después (23–27); cada noche extra tiene costo de alojamiento.
+- Estancia en Tepoztlán del 18 al 23 de enero de 2027. El evento empieza el 18, así que hay que aterrizar en México a más tardar el 17: la ida va del 14 al 17 y el regreso del 23 al 27. Cada noche extra tiene costo de alojamiento.
 - Orígenes: Medellín (MDE), Pereira (PEI) y Bogotá (BOG). Destino: Ciudad de México (MEX) o AIFA (NLU).
 - Pasajeros: el usuario elige de 1 a 3. Los precios de las fuentes son por persona.
 - Canales de compra: tu360 viajes (Bancolombia, cuotas sin interés con tarjetas Bancolombia) y Rappi Travel (6 cuotas sin interés con RappiCard; Rappi PRO quita el cargo de servicio de $100.000 por pasajero). Google Flights es solo referencia.
-- Condiciones del usuario: maleta de mano, pagar a cuotas, la hora de llegada no importa.
+- Condiciones del usuario: maleta de mano, pagar a cuotas, y aterrizar antes del 18 (dentro de eso, la hora no importa).
 - Alertas por Telegram cuando cambia el precio de los itinerarios vigilados.
 
 ## Capabilities and Constraints

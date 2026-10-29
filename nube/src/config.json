@@ -1,24 +1,45 @@
 {
-  "estancia": { "desde": "2027-01-18", "hasta": "2027-01-23" },
+  "estancia": {
+    "desde": "2027-01-18",
+    "hasta": "2027-01-23"
+  },
   "origenes": [
-    { "codigo": "MDE", "nombre": "Medellín" },
-    { "codigo": "PEI", "nombre": "Pereira" },
-    { "codigo": "BOG", "nombre": "Bogotá" }
+    {
+      "codigo": "MDE",
+      "nombre": "Medellín"
+    },
+    {
+      "codigo": "PEI",
+      "nombre": "Pereira"
+    },
+    {
+      "codigo": "BOG",
+      "nombre": "Bogotá"
+    }
   ],
-  "destinos": ["MEX", "NLU"],
-  "idas": ["2027-01-14", "2027-01-18"],
-  "regresos": ["2027-01-23", "2027-01-27"],
+  "destinos": [
+    "MEX",
+    "NLU"
+  ],
+  "idas": [
+    "2027-01-14",
+    "2027-01-17"
+  ],
+  "regresos": [
+    "2027-01-23",
+    "2027-01-27"
+  ],
   "barrido": {
     "por_ejecucion": 4,
     "minutos_prioritarias": 30,
     "minutos_resto": 150,
     "prioritarias": [
       "MDE|2027-01-17|2027-01-24",
-      "MDE|2027-01-18|2027-01-24",
+      "MDE|2027-01-17|2027-01-23",
       "PEI|2027-01-17|2027-01-23",
-      "MDE|2027-01-18|2027-01-23",
-      "PEI|2027-01-18|2027-01-23",
-      "BOG|2027-01-18|2027-01-23"
+      "PEI|2027-01-17|2027-01-24",
+      "BOG|2027-01-17|2027-01-23",
+      "MDE|2027-01-16|2027-01-23"
     ]
   },
   "notificar_si_cambia_mas_de_cop": 10000,
@@ -30,18 +51,79 @@
     "nota": "Hot Days: 10 % menos (máx. $200.000 por compra) y hasta 4 cuotas sin interés con tarjetas Bancolombia, hasta el 31 de octubre"
   },
   "rappi": {
-    "ratios": { "CM": 1.0, "AV": 1.027, "VB": 1.258 },
+    "ratios": {
+      "CM": 1.0,
+      "AV": 1.027,
+      "VB": 1.258
+    },
     "ratio_defecto": 1.03,
     "cargo_servicio": 100000,
     "cuotas": 6,
     "nota": "Estimado sobre Google con la diferencia vista en el checkout de Rappi el 28 de octubre. Con Rappi PRO no se cobra el cargo de servicio."
   },
   "alertas": [
-    { "vigilancia": "mde-17-24", "serie": "tu360-copa", "combo": "MDE|2027-01-17|2027-01-24", "fuente": "tu360", "vuelos": ["CM398"], "nombre": "tu360 · Copa 09:15 (CM398) Medellín 17→24" },
-    { "vigilancia": "mde-17-24", "serie": "copa", "combo": "MDE|2027-01-17|2027-01-24", "fuente": "google", "vuelos": ["CM398"], "nombre": "Google · Copa 09:15 (CM398) Medellín 17→24" },
-    { "vigilancia": "mde-18-24", "serie": "tu360-copa", "combo": "MDE|2027-01-18|2027-01-24", "fuente": "tu360", "vuelos": ["CM164"], "nombre": "tu360 · Copa 08:35 (CM164) Medellín 18→24" },
-    { "vigilancia": "mde-18-24", "serie": "copa", "combo": "MDE|2027-01-18|2027-01-24", "fuente": "google", "vuelos": ["CM164"], "nombre": "Google · Copa 08:35 (CM164) Medellín 18→24" },
-    { "vigilancia": "pei-17-23", "serie": "tu360-avianca", "combo": "PEI|2027-01-17|2027-01-23", "fuente": "tu360", "vuelos": ["AV9240", "AV186"], "nombre": "tu360 · Avianca 16:00 (AV9240) Pereira 17→23" },
-    { "vigilancia": "pei-17-23", "serie": "avianca", "combo": "PEI|2027-01-17|2027-01-23", "fuente": "google", "vuelos": ["AV9240", "AV186"], "nombre": "Google · Avianca 16:00 (AV9240) Pereira 17→23" }
-  ]
+    {
+      "vigilancia": "mde-17-23",
+      "serie": "tu360-copa",
+      "combo": "MDE|2027-01-17|2027-01-23",
+      "fuente": "tu360",
+      "vuelos": [
+        "CM398"
+      ],
+      "nombre": "tu360 · Copa 09:15 (CM398) Medellín 17→23"
+    },
+    {
+      "vigilancia": "mde-17-23",
+      "serie": "copa",
+      "combo": "MDE|2027-01-17|2027-01-23",
+      "fuente": "google",
+      "vuelos": [
+        "CM398"
+      ],
+      "nombre": "Google · Copa 09:15 (CM398) Medellín 17→23"
+    },
+    {
+      "vigilancia": "mde-17-24",
+      "serie": "tu360-copa",
+      "combo": "MDE|2027-01-17|2027-01-24",
+      "fuente": "tu360",
+      "vuelos": [
+        "CM398"
+      ],
+      "nombre": "tu360 · Copa 09:15 (CM398) Medellín 17→24"
+    },
+    {
+      "vigilancia": "mde-17-24",
+      "serie": "copa",
+      "combo": "MDE|2027-01-17|2027-01-24",
+      "fuente": "google",
+      "vuelos": [
+        "CM398"
+      ],
+      "nombre": "Google · Copa 09:15 (CM398) Medellín 17→24"
+    },
+    {
+      "vigilancia": "pei-17-23",
+      "serie": "tu360-avianca",
+      "combo": "PEI|2027-01-17|2027-01-23",
+      "fuente": "tu360",
+      "vuelos": [
+        "AV9240",
+        "AV186"
+      ],
+      "nombre": "tu360 · Avianca 16:00 (AV9240) Pereira 17→23"
+    },
+    {
+      "vigilancia": "pei-17-23",
+      "serie": "avianca",
+      "combo": "PEI|2027-01-17|2027-01-23",
+      "fuente": "google",
+      "vuelos": [
+        "AV9240",
+        "AV186"
+      ],
+      "nombre": "Google · Avianca 16:00 (AV9240) Pereira 17→23"
+    }
+  ],
+  "llegar_antes_de": "2027-01-18 00:00"
 }
