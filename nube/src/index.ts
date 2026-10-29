@@ -1,13 +1,17 @@
 import { env } from "cloudflare:workers";
 import CONFIG from "./config.json";
 import MATRIZ from "./matriz.json";
-import { buscarGoogle, buscarTu360, compactar, googleUrl, sesionTu360, tu360Url, type Itin } from "./fuentes.ts";
+import { buscarGoogle, buscarTu360, buscarTu360Tramos, compactar, googleUrl, sesionTu360, tu360Url, type Itin } from "./fuentes.ts";
 
 type Fuente = "google" | "tu360";
 type Alerta = (typeof CONFIG.alertas)[number];
 
 const TFS = MATRIZ as Record<string, string>;
 const COMBOS = Object.keys(TFS);
+type Extra = { id: string; nombre: string; tramos: string[][]; vuelos?: string[]; aerolinea?: string };
+// Itinerarios multidestino (como el stopover en Panamá): solo tu360, cada 30 minutos.
+const EXTRAS = (CONFIG.extras ?? []) as Extra[];
+const CLAVES_EXTRA = EXTRAS.map((e) => `extra:${e.id}`);
 const PRIORITARIAS = new Set(CONFIG.barrido.prioritarias);
 const UMBRAL = CONFIG.notificar_si_cambia_mas_de_cop;
 const TU360 = CONFIG.tu360;
@@ -155,13 +159,50 @@ async function refrescar(combo: string, sesion: string | undefined, origen: stri
 	return { combo, fuentes: Object.keys(resultados), errores };
 }
 
+/** Consulta un itinerario multidestino, guarda su precio en obs y avisa si se movió. */
+async function refrescarExtra(clave: string, sesion: string | undefined, origen: string) {
+	const e = EXTRAS.find((x) => `extra:${x.id}` === clave)!;
+	const ts = nowIso();
+	const marcar = db().prepare("INSERT INTO barrido VALUES (?, ?) ON CONFLICT (combo) DO UPDATE SET ultima=excluded.ultima").bind(clave, ts);
+	let itins: Itin[];
+	try {
+		itins = await buscarTu360Tramos(e.tramos, sesion);
+	} catch (err) {
+		console.error(clave, String(err));
+		await marcar.run();
+		return { combo: clave, fuentes: [], errores: { tu360: String(err) } };
+	}
+	const cand = itins
+		.filter((it) => it.m && (e.vuelos ? e.vuelos.every((fn, k) => it.f[k] === fn) : it.f[0].startsWith(e.aerolinea ?? "")))
+		.map((it) => it.p);
+	const nuevo = cand.length ? Math.min(...cand) - descuentoTu360(Math.min(...cand)) : null;
+	const prev = await db()
+		.prepare("SELECT precio FROM obs WHERE vigilancia=? AND serie='tu360' ORDER BY ts DESC LIMIT 1")
+		.bind(e.id)
+		.first<{ precio: number | null }>();
+	await db().batch([marcar, db().prepare("INSERT INTO obs VALUES (?,?,?,?)").bind(ts, e.id, "tu360", nuevo)]);
+	console.log(clave, nuevo);
+	const viejo = prev?.precio ?? null;
+	if (viejo !== null && nuevo === null) await notificar(`${e.nombre} ya no aparece`, "El vuelo no salió en la última consulta.", origen, "⚠️");
+	else if (viejo !== null && nuevo !== null && Math.abs(nuevo - viejo) >= UMBRAL) {
+		const bajo = nuevo < viejo;
+		await notificar(
+			`${e.nombre} ${bajo ? "bajó" : "subió"} ${cop(Math.abs(nuevo - viejo))}`,
+			`${cop(viejo)} → ${cop(nuevo)} por persona${descuentoTu360(nuevo) ? ", con el 10 % de Hot Days" : ""}`,
+			origen,
+			bajo ? "📉" : "📈",
+		);
+	}
+	return { combo: clave, fuentes: ["tu360"], errores: {} };
+}
+
 /** Elige las combinaciones más atrasadas: las prioritarias cada 30 min, el resto cada 150. */
 async function siguientes(n: number) {
 	const { results } = await db().prepare("SELECT combo, ultima FROM barrido").all<{ combo: string; ultima: string }>();
 	const ultima = new Map(results.map((r) => [r.combo, Date.parse(r.ultima)]));
 	const ahora = Date.now();
-	return COMBOS.map((c) => {
-		const cada = (PRIORITARIAS.has(c) ? CONFIG.barrido.minutos_prioritarias : CONFIG.barrido.minutos_resto) * 60_000;
+	return [...COMBOS, ...CLAVES_EXTRA].map((c) => {
+		const cada = (PRIORITARIAS.has(c) || c.startsWith("extra:") ? CONFIG.barrido.minutos_prioritarias : CONFIG.barrido.minutos_resto) * 60_000;
 		return { c, atraso: ahora - (ultima.get(c) ?? 0) - cada };
 	})
 		.filter((x) => x.atraso > -60_000)
@@ -182,7 +223,7 @@ async function barrer() {
 	} catch (e) {
 		console.error("tu360 sesión", String(e));
 	}
-	for (const c of combos) await refrescar(c, sesion, origen);
+	for (const c of combos) await (c.startsWith("extra:") ? refrescarExtra(c, sesion, origen) : refrescar(c, sesion, origen));
 }
 
 // ---------- Telegram ----------
@@ -237,7 +278,10 @@ async function apiDatos() {
 		config: {
 			...config,
 			tu360: { ...TU360, vigente: Date.now() <= Date.parse(TU360.descuento_hasta) },
-			alertas: alertas.map(({ vigilancia, serie, ...a }) => ({ id: `${vigilancia}/${serie}`, ...a })),
+			alertas: [
+				...alertas.map(({ vigilancia, serie, ...a }) => ({ id: `${vigilancia}/${serie}`, ...a })),
+				...EXTRAS.map((e) => ({ id: `${e.id}/tu360`, combo: `extra:${e.id}`, fuente: "tu360", vuelos: e.vuelos ?? [], nombre: e.nombre })),
+			],
 			barrido: { ...b, total: COMBOS.length },
 		},
 		estado: { ultima_ejecucion: ultimaEjecucion, ahora: nowIso() },
@@ -247,6 +291,14 @@ async function apiDatos() {
 
 async function apiHistorial(combo: string) {
 	await ensureSchema();
+	const extra = EXTRAS.find((e) => `extra:${e.id}` === combo);
+	if (extra) {
+		const obs = await db()
+			.prepare("SELECT ts, precio FROM obs WHERE vigilancia=? AND serie='tu360' ORDER BY ts")
+			.bind(extra.id)
+			.all<{ ts: string; precio: number | null }>();
+		return { combo, puntos: [], alertas: [{ id: `${extra.id}/tu360`, nombre: extra.nombre, fuente: "tu360", puntos: obs.results.map((r) => [r.ts, r.precio]) }] };
+	}
 	const { results } = await db()
 		.prepare("SELECT ts, fuente, minimos FROM hist WHERE combo=? ORDER BY ts")
 		.bind(combo)
@@ -270,18 +322,18 @@ export default {
 		}
 		if (url.pathname === "/api/historial" && request.method === "GET") {
 			const combo = url.searchParams.get("combo") ?? "";
-			if (!TFS[combo]) return json({ error: "Combinación desconocida" }, 400);
+			if (!TFS[combo] && !CLAVES_EXTRA.includes(combo)) return json({ error: "Combinación desconocida" }, 400);
 			return json(await apiHistorial(combo));
 		}
 		if (url.pathname === "/api/consultar" && request.method === "POST") {
 			const combo = url.searchParams.get("combo") ?? "";
-			if (!TFS[combo]) return json({ error: "Combinación desconocida" }, 400);
+			if (!TFS[combo] && !CLAVES_EXTRA.includes(combo)) return json({ error: "Combinación desconocida" }, 400);
 			await ensureSchema();
 			const fila = await db().prepare("SELECT ultima FROM barrido WHERE combo=?").bind(combo).first<{ ultima: string }>();
 			if (fila && Date.now() - Date.parse(fila.ultima) < ESPERA_MANUAL_MS)
 				return json({ ok: false, motivo: "Esta combinación se consultó hace menos de 3 minutos." }, 429);
 			// Se espera la consulta completa: waitUntil se corta 30 s después de responder.
-			const r = await refrescar(combo, undefined, CONFIG.panel);
+			const r = await (combo.startsWith("extra:") ? refrescarExtra(combo, undefined, CONFIG.panel) : refrescar(combo, undefined, CONFIG.panel));
 			return json({ ok: r.fuentes.length > 0, ...r });
 		}
 		if (url.pathname === "/api/probar-notificacion" && request.method === "POST") {

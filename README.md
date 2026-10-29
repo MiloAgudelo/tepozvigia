@@ -19,6 +19,7 @@ Vigía de precios de tiquetes para un viaje a Tepoztlán (México) en enero de 2
   - Solo modo claro.
   - El diseño está en [DESIGN.md](DESIGN.md) y el contexto del producto en [PRODUCT.md](PRODUCT.md).
 - **Alertas:** mensaje de Telegram cuando un vuelo de `alertas` cambia $10.000 o más por persona, o deja de aparecer. El mensaje enlaza al tablero en esa fecha.
+- **Itinerarios extra:** `extras` en `nube/src/config.json` vigila por tu360 itinerarios de varios tramos, como el stopover en Panamá (`tramos` y, opcionalmente, `vuelos` o `aerolinea`). Se consultan cada 30 minutos, salen en «Vigilados por Telegram» y avisan igual que las alertas.
 - **Secretos del Worker:** `TELEGRAM_TOKEN` (token del bot) y `TELEGRAM_CHAT` (chat al que escribe).
 
 Desplegar cambios (desde `nube/`, con la [CLI `cf`](https://www.npmjs.com/package/cf)):

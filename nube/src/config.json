@@ -126,5 +126,53 @@
       "nombre": "Google · Avianca 16:00 (AV9240) Pereira 17→23"
     }
   ],
-  "llegar_antes_de": "2027-01-18 00:00"
+  "llegar_antes_de": "2027-01-18 00:00",
+  "extras": [
+    {
+      "id": "pty1-16-23",
+      "nombre": "tu360 · Stopover Panamá 1 noche (CM157 sáb 16) · regreso 23",
+      "tramos": [
+        [
+          "MDE",
+          "PTY",
+          "2027-01-16"
+        ],
+        [
+          "PTY",
+          "MEX",
+          "2027-01-17"
+        ],
+        [
+          "MEX",
+          "MDE",
+          "2027-01-23"
+        ]
+      ],
+      "vuelos": [
+        "CM157"
+      ]
+    },
+    {
+      "id": "pty1-16-24",
+      "nombre": "tu360 · Stopover Panamá 1 noche (sáb 16) · regreso 24, Copa más barato",
+      "tramos": [
+        [
+          "MDE",
+          "PTY",
+          "2027-01-16"
+        ],
+        [
+          "PTY",
+          "MEX",
+          "2027-01-17"
+        ],
+        [
+          "MEX",
+          "MDE",
+          "2027-01-24"
+        ]
+      ],
+      "aerolinea": "CM"
+    }
+  ]
 }

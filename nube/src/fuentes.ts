@@ -132,7 +132,17 @@ const minutos = (hms: string | undefined) => {
 	return h * 60 + m;
 };
 
-export async function buscarTu360(origen: string, ida: string, regreso: string, sesion?: string): Promise<Itin[]> {
+export const buscarTu360 = (origen: string, ida: string, regreso: string, sesion?: string) =>
+	buscarTu360Tramos(
+		[
+			[origen, "MEX", ida],
+			["MEX", origen, regreso],
+		],
+		sesion,
+	);
+
+/** Búsqueda con cualquier lista de tramos [origen, destino, fecha]; sirve para multidestino y stopover. */
+export async function buscarTu360Tramos(tramos: string[][], sesion?: string): Promise<Itin[]> {
 	let err: unknown;
 	for (let intento = 0; intento < 3; intento++) {
 		try {
@@ -141,10 +151,7 @@ export async function buscarTu360(origen: string, ida: string, regreso: string, 
 			const busqueda = await tu360Post("AirBySector/Search", {
 				SessionToken,
 				RequestSettings: {},
-				Trips: [
-					[origen, "MEX", ida],
-					["MEX", origen, regreso],
-				].map(([a, b, d]) => ({ DeparturePoint: a, DeparturePointType: "city", ArrivalPoint: b, ArrivalPointType: "city", DepartureDate: d })),
+				Trips: tramos.map(([a, b, d]) => ({ DeparturePoint: a, DeparturePointType: "city", ArrivalPoint: b, ArrivalPointType: "city", DepartureDate: d })),
 				IsBusSearch: false,
 				Adults: 1,
 				Children: 0,
